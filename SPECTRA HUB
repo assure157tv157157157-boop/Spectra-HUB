@@ -4421,12 +4421,6 @@ Tab14:AddButton({
     end
 })
 
-Tab14:AddButton({
-    Name = "Remote Spy",
-    Callback = function()
-        loadstring(game:HttpGet("https://scriptsneonauth.vercel.app/api/scripts/8e94e47d-6a4a-4094-96b8-a4568f03009d/raw"))()
-    end
-})
 
 Tab14:AddButton({
     Name = "Click Teleport",
@@ -4439,7 +4433,7 @@ Tab14:AddButton({
 Tab14:AddButton({
     Name = "SPECTRA drone criador por kayrus999",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB-V2-/refs/heads/main/Documento%204%20(2).txt"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20drone.txt"))()
     end
 })
 
@@ -4457,7 +4451,7 @@ Tab14:AddButton({
 Tab14:AddButton({
     Name = "SPECTRA Emotes",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB-V2-/refs/heads/main/Emotes%20do%20spectra"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20Emotes"))()
     end
 })
 
@@ -4829,11 +4823,8 @@ Tab14:AddButton({
 
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB-V2-/refs/heads/main/Sistema%20de%20logs%20obf"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20logs.txt"))()
 
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB-V2-/refs/heads/main/Spectra%20props.txt"))()
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB-V2-/refs/heads/main/Painel%20adm%20do%20spectra"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20props%20(1).txt"))()
