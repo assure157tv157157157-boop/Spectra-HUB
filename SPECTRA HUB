@@ -55,7 +55,7 @@ Tab1:AddDiscordInvite({
 Tab1:AddButton({
     Name = "info update",
     Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Scripts-do-spectra-hub/refs/heads/main/Sistema%20de%20ui%20update"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20info"))()
     end
 })
 
