@@ -1,0 +1,247 @@
+-- ======================
+-- SERVIÇOS
+-- ======================
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local lastPosition = character.PrimaryPart.Position
+
+player.CharacterAdded:Connect(function(char)
+character = char
+humanoid = char:WaitForChild("Humanoid")
+lastPosition = character.PrimaryPart.Position
+end)
+
+-- ======================
+-- CONFIG
+-- ======================
+local Settings = {
+StopOnMove = true,
+FadeIn = 0.1,
+FadeOut = 0.1
+}
+
+local CurrentTrack
+local IgnoreMoveUntil = 0
+
+-- ======================
+-- EMOTES
+-- ======================
+local EMOTES = {
+{ EmojiId = "101573394483995", Anim = "101573394483995" },
+{ EmojiId = "105381637724646", Anim = "105381637724646" },
+{ EmojiId = "105324347192111", Anim = "105324347192111" },
+{ EmojiId = "114899970878842", Anim = "114899970878842" },
+{ EmojiId = "104330991197585", Anim = "104330991197585" },
+{ EmojiId = "134130303174519", Anim = "134130303174519" },
+{ EmojiId = "95632884451837", Anim = "95632884451837" },
+{ EmojiId = "89431468694521", Anim = "89431468694521" },
+{ EmojiId = "84592760541486", Anim = "84592760541486" },
+{ EmojiId = "120605439830304", Anim = "120605439830304" },
+{ EmojiId = "88425531063616", Anim = "88425531063616" },
+{ EmojiId = "102610758906338", Anim = "102610758906338" },
+{ EmojiId = "80877772569772", Anim = "80877772569772" },
+{ EmojiId = "97272157661329", Anim = "97272157661329" },
+{ EmojiId = "85092320680319", Anim = "85092320680319" },
+{ EmojiId = "70929692881143", Anim = "70929692881143" },
+{ EmojiId = "93818150150183", Anim = "93818150150183" },
+{ EmojiId = "125395158129742", Anim = "125395158129742" },
+{ EmojiId = "90009660557415", Anim = "90009660557415" },
+{ EmojiId = "96606489351695", Anim = "96606489351695" },
+{ EmojiId = "106708015414624", Anim = "106708015414624" },
+{ EmojiId = "103768845612667", Anim = "103768845612667" },
+{ EmojiId = "110511723808460", Anim = "110511723808460" },
+{ EmojiId = "82995540773684", Anim = "82995540773684" },
+{ EmojiId = "103040723950430", Anim = "103040723950430" },
+{ EmojiId = "117049327096718", Anim = "117049327096718" },
+{ EmojiId = "136415352218982", Anim = "136415352218982" },
+{ EmojiId = "122814100170962", Anim = "122814100170962" },
+{ EmojiId = "84511772437190", Anim = "84511772437190" },
+{ EmojiId = "70544785852547", Anim = "70544785852547" },
+{ EmojiId = "105324347192111", Anim = "105324347192111" },
+{ EmojiId = "133594786690861", Anim = "133594786690861" },
+{ EmojiId = "114625666693684", Anim = "114625666693684" },
+{ EmojiId = "82207766385627", Anim = "82207766385627" }
+}
+
+-- ======================
+-- LOADTRACK
+-- ======================
+local function LoadTrack(id)
+if CurrentTrack then
+CurrentTrack:Stop(Settings.FadeOut)
+end
+
+local animId  
+local ok, result = pcall(function()  
+	return game:GetObjects("rbxassetid://" .. tostring(id))  
+end)  
+
+if ok and result and result[1]:IsA("Animation") then  
+	animId = result[1].AnimationId  
+else  
+	animId = "rbxassetid://" .. tostring(id)  
+end  
+
+local anim = Instance.new("Animation")  
+anim.AnimationId = animId  
+
+local track = humanoid:LoadAnimation(anim)  
+track.Priority = Enum.AnimationPriority.Action4  
+track:Play(Settings.FadeIn)  
+
+CurrentTrack = track  
+lastPosition = character.PrimaryPart.Position  
+IgnoreMoveUntil = tick() + 0.15
+
+end
+
+-- ======================
+-- QUEBRAR AO MOVER
+-- ======================
+RunService.RenderStepped:Connect(function()
+if not Settings.StopOnMove then return end
+if not CurrentTrack then return end
+if tick() < IgnoreMoveUntil then return end
+
+local moved = (character.PrimaryPart.Position - lastPosition).Magnitude > 0.1  
+local jumped = humanoid:GetState() == Enum.HumanoidStateType.Jumping  
+
+if moved or jumped then  
+	CurrentTrack:Stop(Settings.FadeOut)  
+	CurrentTrack = nil  
+end  
+
+lastPosition = character.PrimaryPart.Position
+
+end)
+
+-- ======================
+-- UI BASE
+-- ======================
+local gui = Instance.new("ScreenGui", player.PlayerGui)
+gui.ResetOnSpawn = false
+
+local panel = Instance.new("Frame", gui)
+panel.Size = UDim2.fromScale(0.36, 0.48)
+panel.Position = UDim2.fromScale(0.05, 0.26)
+panel.BackgroundTransparency = 1
+panel.Active = true
+panel.Draggable = true
+
+local bg = Instance.new("ImageLabel", panel)
+bg.Size = UDim2.fromScale(1,1)
+bg.Image = "rbxassetid://17698154602"
+bg.ScaleType = Enum.ScaleType.Crop
+bg.BackgroundTransparency = 1
+Instance.new("UICorner", bg).CornerRadius = UDim.new(0,18)
+
+local overlay = Instance.new("Frame", panel)
+overlay.Size = UDim2.fromScale(1,1)
+overlay.BackgroundColor3 = Color3.fromRGB(10,10,10)
+overlay.BackgroundTransparency = 0.25
+overlay.BorderSizePixel = 0
+Instance.new("UICorner", overlay).CornerRadius = UDim.new(0,18)
+
+-- ======================
+-- TOPBAR
+-- ======================
+local top = Instance.new("Frame", panel)
+top.Size = UDim2.fromScale(1, 0.12)
+top.BackgroundTransparency = 1
+
+local function topButton(text, pos)
+local b = Instance.new("TextButton", top)
+b.Size = UDim2.fromScale(0.1, 0.75)
+b.Position = UDim2.fromScale(pos, 0.12)
+b.Text = text
+b.Font = Enum.Font.GothamBold
+b.TextScaled = true
+b.BackgroundColor3 = Color3.fromRGB(30,30,30)
+b.TextColor3 = Color3.new(1,1,1)
+Instance.new("UICorner", b).CornerRadius = UDim.new(1,0)
+return b
+end
+
+local closeBtn = topButton("X", 0.88)
+local minBtn   = topButton("-", 0.76)
+local lockBtn  = topButton("🔓", 0.64)
+
+-- ======================
+-- SCROLL EMOTES
+-- ======================
+local scroll = Instance.new("ScrollingFrame", panel)
+scroll.Position = UDim2.fromScale(0, 0.14)
+scroll.Size = UDim2.fromScale(1, 0.86)
+scroll.BackgroundTransparency = 1
+scroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scroll.ScrollBarImageTransparency = 0.4
+
+local layout = Instance.new("UIGridLayout", scroll)
+layout.CellSize = UDim2.fromScale(0.27, 0.27)
+layout.CellPadding = UDim2.fromScale(0.05, 0.05)
+
+for _, emote in ipairs(EMOTES) do
+local btn = Instance.new("ImageButton", scroll)
+btn.BackgroundColor3 = Color3.fromRGB(20,20,20)
+btn.BackgroundTransparency = 0.15
+btn.BorderSizePixel = 0
+btn.Image = "rbxthumb://type=Asset&id=" .. emote.EmojiId .. "&w=420&h=420"
+btn.ScaleType = Enum.ScaleType.Fit
+Instance.new("UICorner", btn).CornerRadius = UDim.new(0,16)
+Instance.new("UIAspectRatioConstraint", btn).AspectRatio = 1
+
+btn.MouseButton1Click:Connect(function()  
+	LoadTrack(emote.Anim)  
+end)
+
+end
+
+-- ======================
+-- BOLINHA MINIMIZADA (MENOR E PERFEITA)
+-- ======================
+local bubble = Instance.new("ImageButton", gui)
+bubble.Size = UDim2.fromOffset(37, 37)
+bubble.Position = UDim2.fromScale(0.05, 0.62)
+bubble.Image = "rbxassetid://17824304373"
+bubble.Visible = false
+bubble.Active = true
+bubble.Draggable = true
+bubble.BackgroundColor3 = Color3.fromRGB(15,15,15)
+bubble.BackgroundTransparency = 0.08
+bubble.ScaleType = Enum.ScaleType.Fit
+
+local bubbleCorner = Instance.new("UICorner", bubble)
+bubbleCorner.CornerRadius = UDim.new(1, 0)
+
+local stroke = Instance.new("UIStroke", bubble)
+stroke.Color = Color3.fromRGB(255,255,255)
+stroke.Transparency = 0.85
+stroke.Thickness = 1
+
+bubble.MouseButton1Click:Connect(function()
+panel.Visible = true
+bubble.Visible = false
+end)
+
+-- ======================
+-- BOTÕES FUNCIONAIS
+-- ======================
+closeBtn.MouseButton1Click:Connect(function()
+gui:Destroy()
+end)
+
+minBtn.MouseButton1Click:Connect(function()
+panel.Visible = false
+bubble.Visible = true
+end)
+
+lockBtn.MouseButton1Click:Connect(function()
+Settings.StopOnMove = not Settings.StopOnMove
+lockBtn.Text = Settings.StopOnMove and "🔓" or "🔒"
+end)
+
+print("✅ Spectra Emotes UI – script completo, bolinha menor e perfeitamente redonda")
