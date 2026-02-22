@@ -3952,117 +3952,174 @@ local MusicTab = Window:MakeTab({
     Icon = "rbxassetid://7059338404"
 })
 
-MusicTab:AddSection({ "e preciso game pass para ouvir as música" })
+MusicTab:AddSection({ "é preciso game pass para ouvir as músicas" })
 
 --// ===============================
---// TABELAS DE MÚSICA
+--// TABELAS COMPLETAS
 --// ===============================
-
-local Funk = {
-    ["raspa o cabelo dela"] = "106866829236727",
-    ["bata essa ####### aqui"] = "99250885177756",
-    ["mico"] = "78352220341424",
-    ["violen"] = "104767744632555",
-    ["Em Bora"] = "131847084942844",
-    ["Pancadão"] = "76312991186384",
-    ["M4 a1"] = "109403817807062",
-    ["Vovo ta casado"] = "103336395794625",
-    ["Meno"] = "124899151072996",
-    ["Naruto"] = "89473100926016",
-    ["Querendo"] = "110877994245293",
-    ["Ei Moça"] = "138830667342178",
-    ["Empina na Onda"] = "104621031886653",
-    ["berimbau"] = "77712236704085",
-    ["Bonde da peixaria"] = "135355953783002",
-    ["deixa o portão aberto"] = "125323304808942",
-    ["funk da hora"] = "106958630419629",
-    ["funk pesadão"] = "72720721570850",
-    ["mtg funk"] = "81384105684889",
-    ["vapo vapo"] = "135903820233276",
-    ["pesadelo"] = "82016192638562",
-    ["ponto"] = "130758596227702",
-    ["fino"] = "107481584214750",
-    ["boneco"] = "122747553795687",
-    ["Seu Fã"] = "85342086082111",
-    ["Grelô"] = "72200166265935",
-    ["Senta"] = "124085422276732",
-    ["Zum Zum Zum"] = "92446612272052",
-    ["sombria hahaha"] = "72855385972818",
-    ["Quem é o Louco"] = "106958630419629",
-    ["coração"] = "102705292327383",
-    ["Rave Favela"] = "127013133418864",
-    ["V7"] = "80348640826643",
-    ["Se Apaixona"] = "135662066137645",
-    ["melodia virtual"] = "139147474886402",
-    ["pixel"] = "93928823862203",
-    ["viagem sonora"] = "79349174602261",
-    ["sequência"] = "121187736532042",
-    ["Penélope"] = "97011217688307",
-    ["eu já tava bem 😭"] = "93590122047380",
-    ["Melodia Funk"] = "83064304128519"
-}
 
 local Phonk = {
-    ["entre clxy"] = "110274202819990",
-    ["montagem encanta"] = "74258284867725",
-    ["montagem Speed"] = "120342836549924",
-    ["montagem Nova geração"] = "119293698405737",
-    ["montagem senta senta"] = "83656625240780",
-    ["montagem boa não sei o nome"] = "105663768150465",
-    ["montagem risada sombria"] = "93556552625864",
-    ["montagem do karma"] = "79148752172118",
-    ["entre"] = "110274202819990",
-    ["kobal"] = "79381341943021",
-    ["estourada"] = "92175624643620",
-    ["estourada 2"] = "108099943758978",
-    ["montagem no Money"] = "133498664318216",
-    ["montagem emote"] = "121803455304591",
-    ["vamo agressiva"] = "82680101995105",
-    ["perdi o nome"] = "113494161114548",
-    ["mtg phonk"] = "77148331286853",
-    ["potencial"] = "102333287500691",
-    ["passo bem solto"] = "127388462601694",
-    ["montagem diamante"] = "113208690604605",
-    ["montagem lualua"] = "759649143831591",
-    ["montagem ma"] = "98337901681441",
-    ["montagem relacionamento"] = "113072044238343",
-    ["montagem você sabe a diferença?"] = "107260053679799",
-    ["montagem um pouco mais"] = "81665575945119",
-    ["montagem link 30!"] = "120189561947098",
-    ["montagem enlouquecer"] = "121703297529684",
-    ["montagem bailão"] = "129071695986627"
+["Montagem Espanca Loli"] = "98623641908787",
+["Montagem os 3 macete"] = "138730944430517",
+["Montagem soca na danada"] = "100337717591420",
+["Montagem Emirados Árabe"] = "98412934676146",
+["Montagem Espanca Mente 2"] = "135729578171550",
+["Montagem estoura tímpano"] = "113624200970506",
+["Montagem da uma baforada"] = "76983583262607",
+["Montagem quebra cama"] = "104976012074245",
+["Montagem Terror dos 7 mares DJ OBC"] = "101658851913310",
+["Montagem Mini game"] = "85014780788991",
+["Montagem berimbau sequencial"] = "71619650167212",
+["Montagem submundo GH7"] = "137107451922636",
+["Montagem Abravanel"] = "78614982249626",
+["Montagem beat panelado"] = "105438850576001",
+["entre clxy"] = "110274202819990",
+["montagem encanta"] = "74258284867725",
+["montagem Speed"] = "120342836549924",
+["montagem Nova geração"] = "119293698405737",
+["montagem senta senta"] = "83656625240780",
+["montagem boa não sei o nome"] = "105663768150465",
+["montagem risada sombria"] = "93556552625864",
+["montagem do karma"] = "79148752172118",
+["entre"] = "110274202819990",
+["kobal"] = "79381341943021",
+["estourada"] = "92175624643620",
+["estourada 2"] = "108099943758978",
+["montagem no Money"] = "133498664318216",
+["montagem emote"] = "121803455304591",
+["vamo agressiva"] = "82680101995105",
+["perdi o nome"] = "113494161114548",
+["mtg phonk"] = "77148331286853",
+["potencial"] = "102333287500691",
+["passo bem solto"] = "127388462601694",
+["montagem diamante"] = "113208690604605",
+["montagem lualua"] = "759649143831591",
+["montagem ma"] = "98337901681441",
+["montagem relacionamento"] = "113072044238343",
+["montagem você sabe a diferença?"] = "107260053679799",
+["montagem um pouco mais"] = "81665575945119",
+["montagem link 30!"] = "120189561947098",
+["montagem enlouquecer"] = "121703297529684",
+["montagem bailão"] = "129071695986627",
+["Montagem Sinistra Dz7"] = "78098390943739"
+}
+
+local Funk = {
+["Automotivo no bico da garrafa"] = "107047372509033",
+["Beat Malvado DJ OBL"] = "83174160244345",
+["Automotivo do Pou 2.0 DJ NK3"] = "104826703821683",
+["Recebi uma mensagem da sua amiguinha MC Lan"] = "130637458480604",
+["O meu carro bixo, motel de motor"] = "135005299702467",
+["O cheiro bom é o de BCT"] = "117476956542254",
+["Amor é mentira DJ Arana"] = "78544797215218",
+["Eu já sofri por amor"] = "128011871344522",
+["Na brisa uma japonesinha"] = "134130716324734",
+["MC Tuto Barbie"] = "134879044098791",
+["Pocket Renk do Halloween"] = "94600803570382",
+["Onda Subaquática"] = "75422081790794",
+["na onda berimbau"] = "140530013819453",
+["DJ Das Favela"] = "131489289833086",
+["M4 a1"] = "109403817807062",
+["raspa o cabelo dela"] = "106866829236727",
+["bata essa ####### aqui"] = "99250885177756",
+["mico"] = "78352220341424",
+["violen"] = "104767744632555",
+["Em Bora"] = "131847084942844",
+["Pancadão"] = "76312991186384",
+["Vovo ta casado"] = "103336395794625",
+["Meno"] = "124899151072996",
+["Naruto"] = "89473100926016",
+["Querendo"] = "110877994245293",
+["Ei Moça"] = "138830667342178",
+["Empina na Onda"] = "104621031886653",
+["berimbau"] = "77712236704085",
+["Bonde da peixaria"] = "135355953783002",
+["deixa o portão aberto"] = "125323304808942",
+["funk da hora"] = "106958630419629",
+["funk pesadão"] = "72720721570850",
+["mtg funk"] = "81384105684889",
+["vapo vapo"] = "135903820233276",
+["pesadelo"] = "82016192638562",
+["ponto"] = "130758596227702",
+["fino"] = "107481584214750",
+["boneco"] = "122747553795687",
+["Seu Fã"] = "85342086082111",
+["Grelô"] = "72200166265935",
+["Senta"] = "124085422276732",
+["Zum Zum Zum"] = "92446612272052",
+["sombria hahaha"] = "72855385972818",
+["Quem é o Louco"] = "106958630419629",
+["coração"] = "102705292327383",
+["Rave Favela"] = "127013133418864",
+["V7"] = "80348640826643",
+["Se Apaixona"] = "135662066137645",
+["melodia virtual"] = "139147474886402",
+["pixel"] = "93928823862203",
+["viagem sonora"] = "79349174602261",
+["sequência"] = "121187736532042",
+["Penélope"] = "97011217688307",
+["eu já tava bem 😭"] = "93590122047380",
+["Melodia Funk"] = "83064304128519",
+["Uniao Flasco"] = "100989716917693"
 }
 
 local Forro = {
-    [""] = "",
-    [""] = "",
-    [""] = "",
-    ["vai ter mais música aqui em breve"] = ""
+["Em breve mais músicas"] = "",
+["forró ja cansou"] = "74812784884330",
+["forró da resenha"] = "120973520531216"
 }
 
 local Aleatorio = {
-    ["se eu fosse embora agora"] = "83296064994098",
-    [""] = "",
-    [""] = "",
-    ["vai ter mais música aqui em breve"] = ""
+["Em breve mais músicas"] = "",
+["Carro do Ovos"] = "3148329638",
+["confession"] = "92992163303925",
+["Trying To finde"] = "132643763204246",
+["Batalla de bombas"] = "71995582569283",
+["Another hiit"] = "99731755429975",
+["fa3 renitch"] = "128934903242385",
+["Kawaii"] = "13067828528278",
+["Feeling"] = "120764084521465",
+["Aura + Egp"] = "97841988407875",
+["tomagi mo tão"] = "111668097052966",
+["The Twelve"] = "126153082683694",
+["beats"] = "16190782181",
+["Samba"] = "1836175030",
+["Samba2"] = "1838888602",
+["Banka"] = "16190784229",
+["Want To Love"] = "104846670980072",
+["Blassed Mane"] = "16831108393",
+["Onichan"] = "17422156627",
+["hoodtrap"] = "73685038553576",
+["I love you so"] = "98364034458260",
+["Poze Cv"] = "124244582950595",
+["Trap"] = "131582258401093",
+["Oruan - Sou Teu fã"] = "85342086082111",
+["Soldado Guerreiro"] = "71590664026646",
+["Fuga Na Viatura"] = "131891110268352",
+["gol contra"] = "122114766584918",
+["Anxiety"] = "101483901475189",
+["Grelo So fé"] = "72200166265935",
+["escolha certa"] = "107088620814881",
+["lembro ate hoje"] = "71531533552899",
+["Nooo"] = "73685038553576",
+["tuber 93"] = "1839246711"
 }
 
---// ===============================
---// FUNÇÃO TOCAR / PARAR
---// ===============================
+--// FUNÇÃO TOCAR
 local function playMusic(id)
-    local RE = ReplicatedStorage.RE
+    local RE = ReplicatedStorage:FindFirstChild("RE")
+    if not RE then return end
     id = tostring(id)
 
-    RE.PlayerToolEvent:FireServer("ToolMusicText", id)
-    RE["1Player1sHous1e"]:FireServer("PickHouseMusicText", id)
-    RE["1Player1sCa1r"]:FireServer("VehicleMusicPlay", id)
-    RE["1NoMoto1rVehicle1s"]:FireServer("PickingScooterMusicText", id)
+    pcall(function()
+        RE.PlayerToolEvent:FireServer("ToolMusicText", id)
+        RE["1Player1sHous1e"]:FireServer("PickHouseMusicText", id)
+        RE["1Player1sCa1r"]:FireServer("VehicleMusicPlay", id)
+        RE["1NoMoto1rVehicle1s"]:FireServer("PickingScooterMusicText", id)
+    end)
 end
 
---// ===============================
---// DROPDOWNS
---// ===============================
+--// DROPDOWN
 local function makeDropdown(tab, name, data)
     local options = {}
     for k,_ in pairs(data) do
@@ -4074,7 +4131,7 @@ local function makeDropdown(tab, name, data)
         Options = options,
         Callback = function(Value)
             local id = data[Value]
-            if id then
+            if id and id ~= "" then
                 playMusic(id)
             end
         end
@@ -4086,9 +4143,6 @@ makeDropdown(MusicTab, "Phonk", Phonk)
 makeDropdown(MusicTab, "Forró", Forro)
 makeDropdown(MusicTab, "Aleatórios", Aleatorio)
 
---// ===============================
---// PARAR MÚSICA
---// ===============================
 MusicTab:AddButton({
     Name = "Parar Música",
     Callback = function()
@@ -4098,18 +4152,21 @@ MusicTab:AddButton({
 
 print("✅ Sistema de música carregado COMPLETO")
 
-MusicTab:AddSection({ "as músicas só estão pegando em caixa de som" })
+
+
+
+MusicTab:AddSection({ "as mÃºsicas sÃ³ estÃ£o pegando em caixa de som" })
 
 
 --// ===============================
 --// ID PERSONALIZADO
 --// ===============================
-MusicTab:AddSection({ "🎧 ID Personalizado (Escolha qualquer música)" })
+MusicTab:AddSection({ "ðŸŽ§ ID Personalizado (Escolha qualquer mÃºsica)" })
 
 local CustomMusicID = ""
 
 MusicTab:AddTextBox({
-    Name = "Digite o ID da Música",
+    Name = "Digite o ID da MÃºsica",
     PlaceholderText = "Ex: 73778985963973",
     Callback = function(text)
         CustomMusicID = tostring(text)
@@ -4117,13 +4174,14 @@ MusicTab:AddTextBox({
 })
 
 MusicTab:AddButton({
-    Name = "▶ TOCAR ID DIGITADO",
+    Name = "â–¶ TOCAR ID DIGITADO",
     Callback = function()
         if CustomMusicID ~= "" and CustomMusicID ~= nil then
             playMusic(CustomMusicID)
         end
     end
 })
+
 
 
 --// CRIAR ABA PROTECTION
