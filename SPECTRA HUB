@@ -655,7 +655,185 @@ PlayerTab:AddToggle({
     end
 })
 
+--// ===============================
+--// ESP SYSTEM
+--// ===============================
 
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+
+local ESP_ENABLED = {
+    Box = false,
+    HeadDot = false,
+    Line = false
+}
+
+local ESP_CACHE = {}
+
+--// Função para criar Drawing
+local function newDrawing(type)
+    local obj = Drawing.new(type)
+    return obj
+end
+
+--// Criar ESP para jogador
+local function createESP(player)
+    if player == plr then return end
+
+    ESP_CACHE[player] = ESP_CACHE[player] or {}
+
+    -- BOX
+    local box = newDrawing("Square")
+    box.Color = Color3.fromRGB(255,0,0)
+    box.Thickness = 2
+    box.Filled = false
+    box.Visible = false
+
+    -- HEAD DOT
+    local headDot = newDrawing("Circle")
+    headDot.Color = Color3.fromRGB(255,0,0)
+    headDot.Radius = 4
+    headDot.Filled = true
+    headDot.Visible = false
+
+    -- LINE
+    local line = newDrawing("Line")
+    line.Color = Color3.fromRGB(255,0,0)
+    line.Thickness = 2
+    line.Visible = false
+
+    ESP_CACHE[player] = {
+        Box = box,
+        HeadDot = headDot,
+        Line = line
+    }
+end
+
+--// Remover ESP
+local function removeESP(player)
+    if ESP_CACHE[player] then
+        for _,v in pairs(ESP_CACHE[player]) do
+            v:Remove()
+        end
+        ESP_CACHE[player] = nil
+    end
+end
+
+--// Atualização constante
+RunService.RenderStepped:Connect(function()
+    for player, drawings in pairs(ESP_CACHE) do
+        local char = player.Character
+        local humanoid = char and char:FindFirstChild("Humanoid")
+        local hrp = char and char:FindFirstChild("HumanoidRootPart")
+        local head = char and char:FindFirstChild("Head")
+
+        if char and humanoid and humanoid.Health > 0 and hrp then
+            local pos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
+
+            if onScreen then
+
+                -- BOX ESP
+                if ESP_ENABLED.Box then
+                    local scale = 1 / (pos.Z * math.tan(math.rad(Camera.FieldOfView/2)) * 2) * 100
+                    local width = 40 * scale
+                    local height = 60 * scale
+
+                    drawings.Box.Size = Vector2.new(width, height)
+                    drawings.Box.Position = Vector2.new(pos.X - width/2, pos.Y - height/2)
+                    drawings.Box.Visible = true
+                else
+                    drawings.Box.Visible = false
+                end
+
+                -- HEAD DOT
+                if ESP_ENABLED.HeadDot and head then
+                    local headPos, headOnScreen = Camera:WorldToViewportPoint(head.Position)
+                    if headOnScreen then
+                        drawings.HeadDot.Position = Vector2.new(headPos.X, headPos.Y)
+                        drawings.HeadDot.Visible = true
+                    else
+                        drawings.HeadDot.Visible = false
+                    end
+                else
+                    drawings.HeadDot.Visible = false
+                end
+
+                -- LINE ESP
+                if ESP_ENABLED.Line then
+                    drawings.Line.From = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y)
+                    drawings.Line.To = Vector2.new(pos.X, pos.Y)
+                    drawings.Line.Visible = true
+                else
+                    drawings.Line.Visible = false
+                end
+
+            else
+                drawings.Box.Visible = false
+                drawings.HeadDot.Visible = false
+                drawings.Line.Visible = false
+            end
+        else
+            drawings.Box.Visible = false
+            drawings.HeadDot.Visible = false
+            drawings.Line.Visible = false
+        end
+    end
+end)
+
+--// Player Added
+Players.PlayerAdded:Connect(function(player)
+    createESP(player)
+
+    player.CharacterAdded:Connect(function()
+        task.wait(1)
+        createESP(player)
+    end)
+end)
+
+--// Player Removing
+Players.PlayerRemoving:Connect(function(player)
+    removeESP(player)
+end)
+
+--// Criar para quem já está no servidor
+for _,player in pairs(Players:GetPlayers()) do
+    if player ~= plr then
+        createESP(player)
+
+        player.CharacterAdded:Connect(function()
+            task.wait(1)
+            createESP(player)
+        end)
+    end
+end
+
+--// ===============================
+--// TOGGLES
+--// ===============================
+
+PlayerTab:AddToggle({
+    Name = "Box ESP",
+    Default = false,
+    Callback = function(v)
+        ESP_ENABLED.Box = v
+    end
+})
+
+PlayerTab:AddToggle({
+    Name = "Head Dot ESP",
+    Default = false,
+    Callback = function(v)
+        ESP_ENABLED.HeadDot = v
+    end)
+})
+
+PlayerTab:AddToggle({
+    Name = "Line ESP",
+    Default = false,
+    Callback = function(v)
+        ESP_ENABLED.Line = v
+    end)
+})
 
 
 --////////////////////////////////////////////////////
@@ -3943,7 +4121,6 @@ SoundGunTab:AddToggle({
 })
 
 
-
 --// ===============================
 --// ABA MÚSICA
 --// ===============================
@@ -3952,117 +4129,174 @@ local MusicTab = Window:MakeTab({
     Icon = "rbxassetid://7059338404"
 })
 
-MusicTab:AddSection({ "e preciso game pass para ouvir as música" })
+MusicTab:AddSection({ "é preciso game pass para ouvir as músicas" })
 
 --// ===============================
---// TABELAS DE MÚSICA
+--// TABELAS COMPLETAS
 --// ===============================
-
-local Funk = {
-    ["raspa o cabelo dela"] = "106866829236727",
-    ["bata essa ####### aqui"] = "99250885177756",
-    ["mico"] = "78352220341424",
-    ["violen"] = "104767744632555",
-    ["Em Bora"] = "131847084942844",
-    ["Pancadão"] = "76312991186384",
-    ["M4 a1"] = "109403817807062",
-    ["Vovo ta casado"] = "103336395794625",
-    ["Meno"] = "124899151072996",
-    ["Naruto"] = "89473100926016",
-    ["Querendo"] = "110877994245293",
-    ["Ei Moça"] = "138830667342178",
-    ["Empina na Onda"] = "104621031886653",
-    ["berimbau"] = "77712236704085",
-    ["Bonde da peixaria"] = "135355953783002",
-    ["deixa o portão aberto"] = "125323304808942",
-    ["funk da hora"] = "106958630419629",
-    ["funk pesadão"] = "72720721570850",
-    ["mtg funk"] = "81384105684889",
-    ["vapo vapo"] = "135903820233276",
-    ["pesadelo"] = "82016192638562",
-    ["ponto"] = "130758596227702",
-    ["fino"] = "107481584214750",
-    ["boneco"] = "122747553795687",
-    ["Seu Fã"] = "85342086082111",
-    ["Grelô"] = "72200166265935",
-    ["Senta"] = "124085422276732",
-    ["Zum Zum Zum"] = "92446612272052",
-    ["sombria hahaha"] = "72855385972818",
-    ["Quem é o Louco"] = "106958630419629",
-    ["coração"] = "102705292327383",
-    ["Rave Favela"] = "127013133418864",
-    ["V7"] = "80348640826643",
-    ["Se Apaixona"] = "135662066137645",
-    ["melodia virtual"] = "139147474886402",
-    ["pixel"] = "93928823862203",
-    ["viagem sonora"] = "79349174602261",
-    ["sequência"] = "121187736532042",
-    ["Penélope"] = "97011217688307",
-    ["eu já tava bem 😭"] = "93590122047380",
-    ["Melodia Funk"] = "83064304128519"
-}
 
 local Phonk = {
-    ["entre clxy"] = "110274202819990",
-    ["montagem encanta"] = "74258284867725",
-    ["montagem Speed"] = "120342836549924",
-    ["montagem Nova geração"] = "119293698405737",
-    ["montagem senta senta"] = "83656625240780",
-    ["montagem boa não sei o nome"] = "105663768150465",
-    ["montagem risada sombria"] = "93556552625864",
-    ["montagem do karma"] = "79148752172118",
-    ["entre"] = "110274202819990",
-    ["kobal"] = "79381341943021",
-    ["estourada"] = "92175624643620",
-    ["estourada 2"] = "108099943758978",
-    ["montagem no Money"] = "133498664318216",
-    ["montagem emote"] = "121803455304591",
-    ["vamo agressiva"] = "82680101995105",
-    ["perdi o nome"] = "113494161114548",
-    ["mtg phonk"] = "77148331286853",
-    ["potencial"] = "102333287500691",
-    ["passo bem solto"] = "127388462601694",
-    ["montagem diamante"] = "113208690604605",
-    ["montagem lualua"] = "759649143831591",
-    ["montagem ma"] = "98337901681441",
-    ["montagem relacionamento"] = "113072044238343",
-    ["montagem você sabe a diferença?"] = "107260053679799",
-    ["montagem um pouco mais"] = "81665575945119",
-    ["montagem link 30!"] = "120189561947098",
-    ["montagem enlouquecer"] = "121703297529684",
-    ["montagem bailão"] = "129071695986627"
+["Montagem Espanca Loli"] = "98623641908787",
+["Montagem os 3 macete"] = "138730944430517",
+["Montagem soca na danada"] = "100337717591420",
+["Montagem Emirados Árabe"] = "98412934676146",
+["Montagem Espanca Mente 2"] = "135729578171550",
+["Montagem estoura tímpano"] = "113624200970506",
+["Montagem da uma baforada"] = "76983583262607",
+["Montagem quebra cama"] = "104976012074245",
+["Montagem Terror dos 7 mares DJ OBC"] = "101658851913310",
+["Montagem Mini game"] = "85014780788991",
+["Montagem berimbau sequencial"] = "71619650167212",
+["Montagem submundo GH7"] = "137107451922636",
+["Montagem Abravanel"] = "78614982249626",
+["Montagem beat panelado"] = "105438850576001",
+["entre clxy"] = "110274202819990",
+["montagem encanta"] = "74258284867725",
+["montagem Speed"] = "120342836549924",
+["montagem Nova geração"] = "119293698405737",
+["montagem senta senta"] = "83656625240780",
+["montagem boa não sei o nome"] = "105663768150465",
+["montagem risada sombria"] = "93556552625864",
+["montagem do karma"] = "79148752172118",
+["entre"] = "110274202819990",
+["kobal"] = "79381341943021",
+["estourada"] = "92175624643620",
+["estourada 2"] = "108099943758978",
+["montagem no Money"] = "133498664318216",
+["montagem emote"] = "121803455304591",
+["vamo agressiva"] = "82680101995105",
+["perdi o nome"] = "113494161114548",
+["mtg phonk"] = "77148331286853",
+["potencial"] = "102333287500691",
+["passo bem solto"] = "127388462601694",
+["montagem diamante"] = "113208690604605",
+["montagem lualua"] = "759649143831591",
+["montagem ma"] = "98337901681441",
+["montagem relacionamento"] = "113072044238343",
+["montagem você sabe a diferença?"] = "107260053679799",
+["montagem um pouco mais"] = "81665575945119",
+["montagem link 30!"] = "120189561947098",
+["montagem enlouquecer"] = "121703297529684",
+["montagem bailão"] = "129071695986627",
+["Montagem Sinistra Dz7"] = "78098390943739"
+}
+
+local Funk = {
+["Automotivo no bico da garrafa"] = "107047372509033",
+["Beat Malvado DJ OBL"] = "83174160244345",
+["Automotivo do Pou 2.0 DJ NK3"] = "104826703821683",
+["Recebi uma mensagem da sua amiguinha MC Lan"] = "130637458480604",
+["O meu carro bixo, motel de motor"] = "135005299702467",
+["O cheiro bom é o de BCT"] = "117476956542254",
+["Amor é mentira DJ Arana"] = "78544797215218",
+["Eu já sofri por amor"] = "128011871344522",
+["Na brisa uma japonesinha"] = "134130716324734",
+["MC Tuto Barbie"] = "134879044098791",
+["Pocket Renk do Halloween"] = "94600803570382",
+["Onda Subaquática"] = "75422081790794",
+["na onda berimbau"] = "140530013819453",
+["DJ Das Favela"] = "131489289833086",
+["M4 a1"] = "109403817807062",
+["raspa o cabelo dela"] = "106866829236727",
+["bata essa ####### aqui"] = "99250885177756",
+["mico"] = "78352220341424",
+["violen"] = "104767744632555",
+["Em Bora"] = "131847084942844",
+["Pancadão"] = "76312991186384",
+["Vovo ta casado"] = "103336395794625",
+["Meno"] = "124899151072996",
+["Naruto"] = "89473100926016",
+["Querendo"] = "110877994245293",
+["Ei Moça"] = "138830667342178",
+["Empina na Onda"] = "104621031886653",
+["berimbau"] = "77712236704085",
+["Bonde da peixaria"] = "135355953783002",
+["deixa o portão aberto"] = "125323304808942",
+["funk da hora"] = "106958630419629",
+["funk pesadão"] = "72720721570850",
+["mtg funk"] = "81384105684889",
+["vapo vapo"] = "135903820233276",
+["pesadelo"] = "82016192638562",
+["ponto"] = "130758596227702",
+["fino"] = "107481584214750",
+["boneco"] = "122747553795687",
+["Seu Fã"] = "85342086082111",
+["Grelô"] = "72200166265935",
+["Senta"] = "124085422276732",
+["Zum Zum Zum"] = "92446612272052",
+["sombria hahaha"] = "72855385972818",
+["Quem é o Louco"] = "106958630419629",
+["coração"] = "102705292327383",
+["Rave Favela"] = "127013133418864",
+["V7"] = "80348640826643",
+["Se Apaixona"] = "135662066137645",
+["melodia virtual"] = "139147474886402",
+["pixel"] = "93928823862203",
+["viagem sonora"] = "79349174602261",
+["sequência"] = "121187736532042",
+["Penélope"] = "97011217688307",
+["eu já tava bem 😭"] = "93590122047380",
+["Melodia Funk"] = "83064304128519",
+["Uniao Flasco"] = "100989716917693"
 }
 
 local Forro = {
-    [""] = "",
-    [""] = "",
-    [""] = "",
-    ["vai ter mais música aqui em breve"] = ""
+["Em breve mais músicas"] = "",
+["forró ja cansou"] = "74812784884330",
+["forró da resenha"] = "120973520531216"
 }
 
 local Aleatorio = {
-    ["se eu fosse embora agora"] = "83296064994098",
-    [""] = "",
-    [""] = "",
-    ["vai ter mais música aqui em breve"] = ""
+["Em breve mais músicas"] = "",
+["Carro do Ovos"] = "3148329638",
+["confession"] = "92992163303925",
+["Trying To finde"] = "132643763204246",
+["Batalla de bombas"] = "71995582569283",
+["Another hiit"] = "99731755429975",
+["fa3 renitch"] = "128934903242385",
+["Kawaii"] = "13067828528278",
+["Feeling"] = "120764084521465",
+["Aura + Egp"] = "97841988407875",
+["tomagi mo tão"] = "111668097052966",
+["The Twelve"] = "126153082683694",
+["beats"] = "16190782181",
+["Samba"] = "1836175030",
+["Samba2"] = "1838888602",
+["Banka"] = "16190784229",
+["Want To Love"] = "104846670980072",
+["Blassed Mane"] = "16831108393",
+["Onichan"] = "17422156627",
+["hoodtrap"] = "73685038553576",
+["I love you so"] = "98364034458260",
+["Poze Cv"] = "124244582950595",
+["Trap"] = "131582258401093",
+["Oruan - Sou Teu fã"] = "85342086082111",
+["Soldado Guerreiro"] = "71590664026646",
+["Fuga Na Viatura"] = "131891110268352",
+["gol contra"] = "122114766584918",
+["Anxiety"] = "101483901475189",
+["Grelo So fé"] = "72200166265935",
+["escolha certa"] = "107088620814881",
+["lembro ate hoje"] = "71531533552899",
+["Nooo"] = "73685038553576",
+["tuber 93"] = "1839246711"
 }
 
---// ===============================
---// FUNÇÃO TOCAR / PARAR
---// ===============================
+--// FUNÇÃO TOCAR
 local function playMusic(id)
-    local RE = ReplicatedStorage.RE
+    local RE = ReplicatedStorage:FindFirstChild("RE")
+    if not RE then return end
     id = tostring(id)
 
-    RE.PlayerToolEvent:FireServer("ToolMusicText", id)
-    RE["1Player1sHous1e"]:FireServer("PickHouseMusicText", id)
-    RE["1Player1sCa1r"]:FireServer("VehicleMusicPlay", id)
-    RE["1NoMoto1rVehicle1s"]:FireServer("PickingScooterMusicText", id)
+    pcall(function()
+        RE.PlayerToolEvent:FireServer("ToolMusicText", id)
+        RE["1Player1sHous1e"]:FireServer("PickHouseMusicText", id)
+        RE["1Player1sCa1r"]:FireServer("VehicleMusicPlay", id)
+        RE["1NoMoto1rVehicle1s"]:FireServer("PickingScooterMusicText", id)
+    end)
 end
 
---// ===============================
---// DROPDOWNS
---// ===============================
+--// DROPDOWN
 local function makeDropdown(tab, name, data)
     local options = {}
     for k,_ in pairs(data) do
@@ -4074,7 +4308,7 @@ local function makeDropdown(tab, name, data)
         Options = options,
         Callback = function(Value)
             local id = data[Value]
-            if id then
+            if id and id ~= "" then
                 playMusic(id)
             end
         end
@@ -4086,9 +4320,6 @@ makeDropdown(MusicTab, "Phonk", Phonk)
 makeDropdown(MusicTab, "Forró", Forro)
 makeDropdown(MusicTab, "Aleatórios", Aleatorio)
 
---// ===============================
---// PARAR MÚSICA
---// ===============================
 MusicTab:AddButton({
     Name = "Parar Música",
     Callback = function()
@@ -4098,18 +4329,21 @@ MusicTab:AddButton({
 
 print("✅ Sistema de música carregado COMPLETO")
 
-MusicTab:AddSection({ "as músicas só estão pegando em caixa de som" })
+
+
+
+MusicTab:AddSection({ "as mÃºsicas sÃ³ estÃ£o pegando em caixa de som" })
 
 
 --// ===============================
 --// ID PERSONALIZADO
 --// ===============================
-MusicTab:AddSection({ "🎧 ID Personalizado (Escolha qualquer música)" })
+MusicTab:AddSection({ "ðŸŽ§ ID Personalizado (Escolha qualquer mÃºsica)" })
 
 local CustomMusicID = ""
 
 MusicTab:AddTextBox({
-    Name = "Digite o ID da Música",
+    Name = "Digite o ID da MÃºsica",
     PlaceholderText = "Ex: 73778985963973",
     Callback = function(text)
         CustomMusicID = tostring(text)
@@ -4117,7 +4351,7 @@ MusicTab:AddTextBox({
 })
 
 MusicTab:AddButton({
-    Name = "▶ TOCAR ID DIGITADO",
+    Name = "â–¶ TOCAR ID DIGITADO",
     Callback = function()
         if CustomMusicID ~= "" and CustomMusicID ~= nil then
             playMusic(CustomMusicID)
@@ -4126,259 +4360,533 @@ MusicTab:AddButton({
 })
 
 
---// CRIAR ABA PROTECTION
+--==============================
+-- TAB
+--==============================
+
 local ProtectionTab = Window:MakeTab({
     Title = "Protection",
     Icon = "rbxassetid://5197571732"
 })
 
---// REFERÊNCIAS
-local RunService = game:GetService("RunService")
-local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local LocalPlayer = Players.LocalPlayer
 
---===============================
--- FUNÇÃO ANTI-FLING GENÉRICA
---===============================
-function AntiFlingLoop(name, finder)
-    return function(state)
-        task.spawn(function()
-            while state do
-                local target = finder()
-                if target then
-                    for _, part in ipairs(target:GetDescendants()) do
-                        if part:IsA("BasePart") then
-                            part.CanCollide = true
-                            part.Anchored = true
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Teleport",
+    Default = false,
+    Callback = function(state)
+
+        if state then
+
+            local lastPosition
+            local connection
+
+            connection = game:GetService("RunService").Heartbeat:Connect(function()
+
+                local char = game.Players.LocalPlayer.Character
+                if not char then return end
+
+                local root = char:FindFirstChild("HumanoidRootPart")
+                if not root then return end
+
+                if not lastPosition then
+                    lastPosition = root.Position
+                    return
+                end
+
+                local distance = (root.Position - lastPosition).Magnitude
+
+                if distance > 80 then
+                    root.CFrame = CFrame.new(lastPosition)
+                    root.AssemblyLinearVelocity = Vector3.zero
+                    root.AssemblyAngularVelocity = Vector3.zero
+                else
+                    lastPosition = root.Position
+                end
+
+            end)
+
+            -- guarda conexão dentro do toggle
+            ProtectionTab._AntiTeleportConnection = connection
+
+        else
+
+            if ProtectionTab._AntiTeleportConnection then
+                ProtectionTab._AntiTeleportConnection:Disconnect()
+                ProtectionTab._AntiTeleportConnection = nil
+            end
+
+        end
+    end
+})
+
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Car",
+    Default = false,
+    Callback = function(state)
+
+        local Workspace = game:GetService("Workspace")
+        local VehiclesFolder = Workspace:FindFirstChild("Vehicles")
+
+        if not VehiclesFolder then
+            warn("Pasta Vehicles não encontrada")
+            return
+        end
+
+        if state then
+
+            ProtectionTab._AntiCarParts = {}
+
+            for _, obj in ipairs(VehiclesFolder:GetDescendants()) do
+                if obj:IsA("BasePart") then
+                    table.insert(ProtectionTab._AntiCarParts, {
+                        Part = obj,
+                        CanCollide = obj.CanCollide
+                    })
+
+                    obj.CanCollide = false
+                end
+            end
+
+        else
+
+            if ProtectionTab._AntiCarParts then
+                for _, data in ipairs(ProtectionTab._AntiCarParts) do
+                    if data.Part and data.Part.Parent then
+                        data.Part.CanCollide = data.CanCollide
+                    end
+                end
+            end
+
+            ProtectionTab._AntiCarParts = nil
+        end
+
+    end
+})
+
+ProtectionTab:AddToggle({
+    Name = "Anti Void",
+    Default = false,
+    Callback = function(state)
+
+        if state then
+
+            local RunService = game:GetService("RunService")
+            local LocalPlayer = game.Players.LocalPlayer
+
+            local lastSafePosition = nil
+            local lastY = nil
+            local emergencyMode = false
+
+            local connection
+
+            connection = RunService.Heartbeat:Connect(function()
+
+                local char = LocalPlayer.Character
+                if not char then return end
+
+                local root = char:FindFirstChild("HumanoidRootPart")
+                if not root then return end
+
+                local currentY = root.Position.Y
+
+                -- Salva posição segura (quando está acima de -50)
+                if currentY > -50 then
+                    lastSafePosition = root.Position
+                    emergencyMode = false
+                end
+
+                -- Detecta queda brusca
+                if lastY then
+                    local deltaY = currentY - lastY
+
+                    if deltaY < -100 then
+                        -- Caiu muito rápido
+                        if lastSafePosition then
+                            root.CFrame = CFrame.new(lastSafePosition + Vector3.new(0,5,0))
+                            root.AssemblyLinearVelocity = Vector3.zero
+                            root.AssemblyAngularVelocity = Vector3.zero
                         end
                     end
                 end
-                task.wait(0.5)
-            end
-        end)
-    end
-end
 
---===============================
--- TOGGLES INDIVIDUAIS
---===============================
-ProtectionTab:AddToggle({Name = "Anti Fling Carros", Default = false, Callback = AntiFlingLoop("Vehicles", function() return Workspace:FindFirstChild("Vehicles") end)})
-ProtectionTab:AddToggle({Name = "Anti Canoe Fling", Default = false, Callback = AntiFlingLoop("Canoes", function() local wc = Workspace:FindFirstChild("WorkspaceCom") return wc and wc:FindFirstChild("001_CanoeStorage") end)})
-ProtectionTab:AddToggle({Name = "Anti Fling Jets", Default = false, Callback = AntiFlingLoop("Jets", function() local f = Workspace:FindFirstChild("WorkspaceCom") if f and f:FindFirstChild("001_Airport") then local s = f["001_Airport"]:FindFirstChild("AirportHanger") if s then return s:FindFirstChild("001_JetStorage") and s["001_JetStorage"]:FindFirstChild("JetAirport") end end end)})
-ProtectionTab:AddToggle({Name = "Anti Fling Helicópteros", Default = false, Callback = AntiFlingLoop("Helis", function() local f = Workspace:FindFirstChild("WorkspaceCom") return f and f:FindFirstChild("001_HeliStorage") and f["001_HeliStorage"]:FindFirstChild("PoliceStationHeli") end)})
-ProtectionTab:AddToggle({Name = "Anti Fling Ball", Default = false, Callback = AntiFlingLoop("Balls", function() local f = Workspace:FindFirstChild("WorkspaceCom") return f and f:FindFirstChild("001_SoccerBalls") end)})
+                lastY = currentY
 
---===============================
--- Anti Sit / Sofá / Grab
---===============================
-local antiSitActive = false
-ProtectionTab:AddToggle({
-    Name = "Anti Sit / Grab / Sofá",
-    Default = false,
-    Callback = function(state)
-        antiSitActive = state
-        task.spawn(function()
-            while antiSitActive and LocalPlayer.Character do
-                local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-                    if humanoid:GetState() == Enum.HumanoidStateType.Seated then
-                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                -- Se ainda estiver muito abaixo, ativa modo emergência
+                if currentY < -120 then
+                    emergencyMode = true
+                end
+
+                -- 🚨 MODO OH MY GOD 🚨
+                if emergencyMode then
+                    root.AssemblyLinearVelocity = Vector3.new(0,150,0)
+
+                    if root.Position.Y > -20 then
+                        emergencyMode = false
+                        root.AssemblyLinearVelocity = Vector3.zero
                     end
                 end
-                task.wait(0.05)
+
+            end)
+
+            ProtectionTab._AntiVoidConnection = connection
+
+        else
+
+            if ProtectionTab._AntiVoidConnection then
+                ProtectionTab._AntiVoidConnection:Disconnect()
+                ProtectionTab._AntiVoidConnection = nil
             end
-        end)
+
+        end
     end
 })
 
---===============================
--- Anti Lag / Anti Tool
---===============================
-ProtectionTab:AddToggle({
-    Name = "Anti-Lag / Anti Tool",
-    Default = false,
-    Callback = function(state)
-        if not state then return end
-        task.spawn(function()
-            local dedupLock = {}
-            local function isTool(inst) return inst:IsA("Tool") end
-            local function gather(player)
-                local items = {}
-                local containers = {}
-                if player.Character then table.insert(containers, player.Character) end
-                local backpack = player:FindFirstChildOfClass("Backpack")
-                if backpack then table.insert(containers, backpack) end
-                local sg = player:FindFirstChild("StarterGear")
-                if sg then table.insert(containers, sg) end
-                for _, container in ipairs(containers) do
-                    for _, child in ipairs(container:GetChildren()) do
-                        if isTool(child) then table.insert(items, child) end
-                    end
-                end
-                return items
-            end
-            local function dedupe(player)
-                if dedupLock[player] then return end
-                dedupLock[player] = true
-                local tools = gather(player)
-                if #tools > 1 then
-                    for i = 2, #tools do pcall(function() tools[i]:Destroy() end) end
-                end
-                dedupLock[player] = false
-            end
-            Players.PlayerAdded:Connect(function(plr) dedupe(plr) end)
-            for _,plr in ipairs(Players:GetPlayers()) do dedupe(plr) end
-            while state do
-                for _,plr in ipairs(Players:GetPlayers()) do dedupe(plr) end
-                task.wait(2)
-            end
-        end)
-    end
-})
 
---===============================
--- Anti Fling Portas
---===============================
+
+
 ProtectionTab:AddToggle({
-    Name = "Anti Fling Portas",
+    Name = "Anti Boat ",
     Default = false,
     Callback = function(state)
-        if not _G.hiddenDoors then _G.hiddenDoors = {} end
+
+        local Workspace = game:GetService("Workspace")
+        local boatsFolder = Workspace:FindFirstChild("Vehicles")
+
+        if not boatsFolder then
+            warn("Vehicles não encontrado")
+            return
+        end
+
+        -- tabela pra salvar estado original
+        if not ProtectionTab._BoatCache then
+            ProtectionTab._BoatCache = {}
+        end
+
         if state then
-            _G.hiddenDoors = {}
-            for _, obj in ipairs(workspace:GetDescendants()) do
+
+            ProtectionTab._BoatCache = {}
+
+            for _, part in ipairs(boatsFolder:GetDescendants()) do
+                if part:IsA("BasePart") then
+
+                    ProtectionTab._BoatCache[part] = {
+                        Anchored = part.Anchored,
+                        CanCollide = part.CanCollide
+                    }
+
+                    part.Anchored = true
+                    part.CanCollide = true
+                end
+            end
+
+        else
+
+            for part, data in pairs(ProtectionTab._BoatCache) do
+                if part and part.Parent then
+                    part.Anchored = data.Anchored
+                    part.CanCollide = data.CanCollide
+                end
+            end
+
+            ProtectionTab._BoatCache = {}
+
+        end
+
+    end
+})
+
+
+
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Helicopter",
+    Default = false,
+    Callback = function(state)
+
+        local Workspace = game:GetService("Workspace")
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        if not folder then return end
+
+        local heliStorage = folder:FindFirstChild("001_HeliStorage")
+        if not heliStorage then return end
+
+        if not ProtectionTab._HeliCache then
+            ProtectionTab._HeliCache = {}
+        end
+
+        if state then
+
+            ProtectionTab._HeliCache = {}
+
+            for _, part in ipairs(heliStorage:GetDescendants()) do
+                if part:IsA("BasePart") then
+
+                    ProtectionTab._HeliCache[part] = {
+                        Anchored = part.Anchored,
+                        CanCollide = part.CanCollide
+                    }
+
+                    part.Anchored = true
+                    part.CanCollide = true
+                end
+            end
+
+        else
+
+            for part, data in pairs(ProtectionTab._HeliCache) do
+                if part and part.Parent then
+                    part.Anchored = data.Anchored
+                    part.CanCollide = data.CanCollide
+                end
+            end
+
+            ProtectionTab._HeliCache = {}
+
+        end
+    end
+})
+
+
+
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Jet",
+    Default = false,
+    Callback = function(state)
+
+        local Workspace = game:GetService("Workspace")
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        if not folder then return end
+
+        local airport = folder:FindFirstChild("001_Airport")
+        if not airport then return end
+
+        local hanger = airport:FindFirstChild("AirportHanger")
+        if not hanger then return end
+
+        local jetStorage = hanger:FindFirstChild("001_JetStorage")
+        if not jetStorage then return end
+
+        if not ProtectionTab._JetCache then
+            ProtectionTab._JetCache = {}
+        end
+
+        if state then
+
+            ProtectionTab._JetCache = {}
+
+            for _, part in ipairs(jetStorage:GetDescendants()) do
+                if part:IsA("BasePart") then
+
+                    ProtectionTab._JetCache[part] = {
+                        Anchored = part.Anchored,
+                        CanCollide = part.CanCollide
+                    }
+
+                    part.Anchored = true
+                    part.CanCollide = true
+                end
+            end
+
+        else
+
+            for part, data in pairs(ProtectionTab._JetCache) do
+                if part and part.Parent then
+                    part.Anchored = data.Anchored
+                    part.CanCollide = data.CanCollide
+                end
+            end
+
+            ProtectionTab._JetCache = {}
+
+        end
+    end
+})
+
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Canoe",
+    Default = false,
+    Callback = function(state)
+
+        local Workspace = game:GetService("Workspace")
+        local folder = Workspace:FindFirstChild("WorkspaceCom")
+        if not folder then return end
+
+        local canoeStorage = folder:FindFirstChild("001_CanoeStorage")
+        if not canoeStorage then return end
+
+        if not ProtectionTab._CanoeCache then
+            ProtectionTab._CanoeCache = {}
+        end
+
+        if state then
+
+            ProtectionTab._CanoeCache = {}
+
+            for _, part in ipairs(canoeStorage:GetDescendants()) do
+                if part:IsA("BasePart") then
+
+                    ProtectionTab._CanoeCache[part] = {
+                        Anchored = part.Anchored,
+                        CanCollide = part.CanCollide
+                    }
+
+                    part.Anchored = true
+                    part.CanCollide = true
+                end
+            end
+
+        else
+
+            for part, data in pairs(ProtectionTab._CanoeCache) do
+                if part and part.Parent then
+                    part.Anchored = data.Anchored
+                    part.CanCollide = data.CanCollide
+                end
+            end
+
+            ProtectionTab._CanoeCache = {}
+
+        end
+    end
+})
+
+
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Portas",
+    Default = false,
+    Callback = function(state)
+
+        local Workspace = game:GetService("Workspace")
+
+        -- Cache
+        if not ProtectionTab._DoorCache then
+            ProtectionTab._DoorCache = {}
+        end
+
+        if state then
+
+            ProtectionTab._DoorCache = {}
+
+            for _, obj in ipairs(Workspace:GetDescendants()) do
                 if obj:IsA("BasePart") and obj.Name:lower():find("door") then
-                    local doorData = {door=obj, originalTransparency=obj.Transparency, originalCanCollide=obj.CanCollide, originalCastShadow=obj.CastShadow}
+
+                    ProtectionTab._DoorCache[obj] = {
+                        Transparency = obj.Transparency,
+                        CanCollide = obj.CanCollide,
+                        CastShadow = obj.CastShadow
+                    }
+
                     obj.Transparency = 1
                     obj.CanCollide = false
                     obj.CastShadow = false
-                    for _, child in ipairs(obj:GetChildren()) do
-                        if child:IsA("BasePart") then child.Transparency = 1; child.CanCollide=false
-                        elseif child:IsA("SurfaceGui") or child:IsA("BillboardGui") then child.Enabled = false end
-                    end
-                    table.insert(_G.hiddenDoors, doorData)
                 end
             end
-            print("⚡ " .. #_G.hiddenDoors .. " portas escondidas!")
+
         else
-            for _, doorData in ipairs(_G.hiddenDoors or {}) do
-                if doorData.door and doorData.door.Parent then
-                    doorData.door.Transparency = doorData.originalTransparency
-                    doorData.door.CanCollide = doorData.originalCanCollide
-                    doorData.door.CastShadow = doorData.originalCastShadow
-                    for _, child in ipairs(doorData.door:GetChildren()) do
-                        if child:IsA("BasePart") then child.Transparency=0; child.CanCollide=true
-                        elseif child:IsA("SurfaceGui") or child:IsA("BillboardGui") then child.Enabled = true end
-                    end
+
+            for part, data in pairs(ProtectionTab._DoorCache) do
+                if part and part.Parent then
+                    part.Transparency = data.Transparency
+                    part.CanCollide = data.CanCollide
+                    part.CastShadow = data.CastShadow
                 end
             end
-            print("✔ " .. #(_G.hiddenDoors or {}) .. " portas restauradas!")
-            _G.hiddenDoors = {}
+
+            ProtectionTab._DoorCache = {}
+
         end
     end
 })
 
---===============================
--- TOGGLE MASTER – PROTEÇÃO ALL
---===============================
-ProtectionTab:AddToggle({
-    Name = "🛡️ Proteção All",
-    Default = false,
-    Callback = function(state)
-        for _,toggle in ipairs(ProtectionTab.Toggles) do
-            if toggle.Name ~= "🛡️ Proteção All" then
-                toggle:SetState(state)
-            end
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Controle interno
+local antiSitEnabled = false
+local humanoidConn = nil
+local characterConn = nil
+
+-- Função que aplica no humanoid
+local function setupHumanoid(hum)
+    if not hum then return end
+
+    -- Garante que nunca sente
+    hum.Sit = false
+    hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+
+    -- Remove conexão antiga
+    if humanoidConn then
+        humanoidConn:Disconnect()
+        humanoidConn = nil
+    end
+
+    humanoidConn = hum.Seated:Connect(function(isSeated)
+        if isSeated and antiSitEnabled then
+            hum.Sit = false
+            hum:ChangeState(Enum.HumanoidStateType.GettingUp)
         end
-    end
-})
-
---===============================
--- TOGGLE ULTRA MAX / ANTI-KILL / ANTI-FALL
---===============================
-local UltraEnabled = false
-local Connections = {}
-local lastSafeCFrame = nil
-local lastCheck = tick()
-local MAX_SPEED = 85
-local MAX_FALL_SPEED = -120
-local MAP_Y_LIMIT = -80
-
-local function disconnectAll()
-    for _,c in ipairs(Connections) do pcall(function() c:Disconnect() end) end
-    table.clear(Connections)
+    end)
 end
 
-local function getChar() return LocalPlayer.Character end
-local function getHRP() local c=getChar() return c and c:FindFirstChild("HumanoidRootPart") end
-local function getHum() local c=getChar() return c and c:FindFirstChildOfClass("Humanoid") end
-local function restorePosition()
-    local hrp = getHRP()
-    if hrp and lastSafeCFrame then
-        hrp.AssemblyLinearVelocity=Vector3.zero
-        hrp.AssemblyAngularVelocity=Vector3.zero
-        hrp.CFrame=lastSafeCFrame+Vector3.new(0,5,0)
+-- Função que aplica no personagem
+local function applyToCharacter(character)
+    local hum = character:WaitForChild("Humanoid", 5)
+    if hum then
+        setupHumanoid(hum)
     end
 end
 
 ProtectionTab:AddToggle({
-    Name = "🛡️ Proteção Máxima ULTRA++",
+    Name = "Anti-Sit",
     Default = false,
     Callback = function(state)
-        UltraEnabled = state
-        disconnectAll()
-        if state then task.wait(0.4) end
-        if not state then return end
+        antiSitEnabled = state
 
-        table.insert(Connections, RunService.Heartbeat:Connect(function()
-            local hrp = getHRP()
-            if hrp then lastSafeCFrame = hrp.CFrame end
-        end))
+        if state then
 
-        table.insert(Connections, RunService.Heartbeat:Connect(function()
-            if not UltraEnabled then return end
-            local char = getChar()
-            local hrp = getHRP()
-            local hum = getHum()
-            if not (char and hrp and hum) then return end
-            hum:SetStateEnabled(Enum.HumanoidStateType.Seated,false)
-            if hum:GetState()==Enum.HumanoidStateType.Seated then hum:ChangeState(Enum.HumanoidStateType.GettingUp) end
-            for _,p in ipairs(char:GetDescendants()) do if p:IsA("BasePart") then p.CanCollide=true; p.Anchored=false end end
-            hrp.AssemblyAngularVelocity=Vector3.zero
-            if hrp.AssemblyLinearVelocity.Magnitude>MAX_SPEED then restorePosition() end
-            hrp.CustomPhysicalProperties=PhysicalProperties.new(0.01,0,0,0,0)
-        end))
+            -- Aplica se já estiver spawnado
+            if LocalPlayer.Character then
+                applyToCharacter(LocalPlayer.Character)
+            end
 
-        table.insert(Connections, RunService.Heartbeat:Connect(function()
-            if not UltraEnabled then return end
-            local hrp=getHRP()
-            if not hrp then return end
-            local now=tick()
-            if now-lastCheck<0.15 then return end
-            lastCheck=now
-            local vy=hrp.AssemblyLinearVelocity.Y
-            if vy<MAX_FALL_SPEED or hrp.Position.Y<MAP_Y_LIMIT then restorePosition() end
-        end))
-
-        task.spawn(function()
-            while UltraEnabled do
-                for _,obj in ipairs(Workspace:GetDescendants()) do
-                    if obj:IsA("BodyMover") or obj:IsA("VectorForce") or obj:IsA("AngularVelocity") or obj:IsA("LinearVelocity") then
-                        pcall(function() obj:Destroy() end)
+            -- Reconecta apenas 1 vez
+            if not characterConn then
+                characterConn = LocalPlayer.CharacterAdded:Connect(function(char)
+                    if antiSitEnabled then
+                        applyToCharacter(char)
                     end
-                end
-                task.wait(2)
+                end)
             end
-        end)
 
-        table.insert(Connections, LocalPlayer.CharacterAdded:Connect(function(char)
-            task.wait(0.6)
-            for _,v in ipairs(char:GetChildren()) do
-                if v:IsA("Tool") then pcall(function() v:Destroy() end) end
+        else
+
+            -- Desativa humanoid atual
+            if LocalPlayer.Character then
+                local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    hum:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+                end
             end
-        end))
+
+            -- Limpa conexão do humanoid
+            if humanoidConn then
+                humanoidConn:Disconnect()
+                humanoidConn = nil
+            end
+
+        end
     end
 })
 
