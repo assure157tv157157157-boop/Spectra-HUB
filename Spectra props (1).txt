@@ -170,6 +170,107 @@ end
 
 
 --////////////////////////////////////////////////////
+--// AUTO RGB PROPS (INTELIGENTE)
+
+local RunService = game:GetService("RunService")
+
+local rgbAtivo = false
+local rgbConnection = nil
+local propConnections = {}
+local meusProps = {}
+
+local function IsMeuProp(obj)
+    return obj:IsA("Model")
+        and obj.Name:find(plr.Name)
+        and obj:FindFirstChild("ChangePropColor")
+end
+
+local function AddProp(prop)
+    if not table.find(meusProps, prop) then
+        table.insert(meusProps, prop)
+    end
+end
+
+local function ScanProps()
+    meusProps = {}
+
+    local workspaceCom = workspace:FindFirstChild("WorkspaceCom")
+    if not workspaceCom then return end
+
+    for _, obj in ipairs(workspaceCom:GetDescendants()) do
+        if IsMeuProp(obj) then
+            AddProp(obj)
+        end
+    end
+end
+
+local function MonitorarNovosProps()
+    local workspaceCom = workspace:FindFirstChild("WorkspaceCom")
+    if not workspaceCom then return end
+
+    local conn = workspaceCom.DescendantAdded:Connect(function(obj)
+        if rgbAtivo and IsMeuProp(obj) then
+            AddProp(obj)
+        end
+    end)
+
+    table.insert(propConnections, conn)
+end
+
+TrollTab:AddToggle({
+    Name = "Auto RGB Props",
+    Default = false,
+    Callback = function(state)
+
+        rgbAtivo = state
+
+        if rgbAtivo then
+
+            ScanProps()
+            MonitorarNovosProps()
+
+            rgbConnection = RunService.Heartbeat:Connect(function()
+
+                local hue = (tick() * 0.5) % 1
+                local color = Color3.fromHSV(hue, 1, 1)
+
+                for i = #meusProps, 1, -1 do
+                    local prop = meusProps[i]
+
+                    if not prop or not prop.Parent then
+                        table.remove(meusProps, i)
+                    else
+                        pcall(function()
+                            prop.ChangePropColor:InvokeServer(color)
+                        end)
+                    end
+                end
+
+            end)
+
+        else
+
+            if rgbConnection then
+                rgbConnection:Disconnect()
+                rgbConnection = nil
+            end
+
+            for _, c in ipairs(propConnections) do
+                c:Disconnect()
+            end
+
+            propConnections = {}
+            meusProps = {}
+
+        end
+    end
+})
+
+
+
+
+
+--////////////////////////////////////////////////////
 --// ANTI-SIT
 TrollTab:AddSection({ "Anti-Sit" })
 
@@ -1039,6 +1140,77 @@ TrollTab:AddToggle({
         end
     end
 })
+
+
+
+
+--////////////////////////////////////////////////////
+--// GIRO FIXO OTIMIZADO (SEM TRAVAR)
+
+local RunService = game:GetService("RunService")
+local giroFixoAtivo = false
+local giroConnection = nil
+
+local function GetMyProps()
+    local props = {}
+    local workspaceCom = workspace:FindFirstChild("WorkspaceCom")
+    if not workspaceCom then return props end
+
+    for _, obj in ipairs(workspaceCom:GetDescendants()) do
+        if obj:IsA("Model") and obj.Name:find(plr.Name) then
+            if obj:FindFirstChild("SetCurrentCFrame") then
+                table.insert(props, obj)
+            end
+        end
+    end
+
+    return props
+end
+
+TrollTab:AddToggle({
+    Name = "tudo junto",
+    Default = false,
+    Callback = function(state)
+        giroFixoAtivo = state
+
+        if giroFixoAtivo then
+
+            local myProps = GetMyProps()
+
+            giroConnection = RunService.Heartbeat:Connect(function()
+
+                local char = plr.Character
+                if not char then return end
+                local root = char:FindFirstChild("HumanoidRootPart")
+                if not root then return end
+
+                for _, prop in ipairs(myProps) do
+                    pcall(function()
+                        local cf =
+                            root.CFrame *
+                            CFrame.new(0, -1, -10) *
+                            CFrame.Angles(
+                                math.rad(0),
+                                math.rad(-70),
+                                math.rad(59)
+                            )
+
+                        prop.SetCurrentCFrame:InvokeServer(cf)
+                    end)
+                end
+
+            end)
+
+        else
+            if giroConnection then
+                giroConnection:Disconnect()
+                giroConnection = nil
+            end
+        end
+    end
+})
+
+
 
 
 TrollTab:AddSection({"props no player selecionado"})
