@@ -147,57 +147,6 @@ https://pt.pornhub.com/gay/video/search?search=porno+gay
 
 
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%202"))()
-
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%203"))()
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%202"))()
-
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%203"))()
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%202"))()
-
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%203"))()
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%202"))()
-
-
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%203"))()
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -4183,6 +4132,9 @@ MusicTab:AddButton({
 })
 
 
+
+
+
 --==============================
 -- TAB
 --==============================
@@ -4192,6 +4144,251 @@ local ProtectionTab = Window:MakeTab({
     Icon = "rbxassetid://5197571732"
 })
 
+
+
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local Connections = {}
+
+local function CreateAntiFreeze(toggleName, finder)
+    return function(state)
+
+        if state then
+
+            Connections[toggleName] = RunService.Heartbeat:Connect(function()
+
+                local target = finder()
+                if target then
+                    for _, part in ipairs(target:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.Anchored = true
+                            part.CanCollide = true
+                        end
+                    end
+                end
+
+            end)
+
+        else
+
+            if Connections[toggleName] then
+                Connections[toggleName]:Disconnect()
+                Connections[toggleName] = nil
+            end
+
+            -- Restaurar objetos
+            local target = finder()
+            if target then
+                for _, part in ipairs(target:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.Anchored = false
+                    end
+                end
+            end
+
+        end
+
+    end
+end
+
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Fling Carro",
+    Default = false,
+    Callback = CreateAntiFreeze("Carro", function()
+        return Workspace:FindFirstChild("Vehicles")
+    end)
+})
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Fling Barco",
+    Default = false,
+    Callback = CreateAntiFreeze("Barco", function()
+        local wc = Workspace:FindFirstChild("WorkspaceCom")
+        return wc and wc:FindFirstChild("001_BoatStorage")
+    end)
+})
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Fling Jato",
+    Default = false,
+    Callback = CreateAntiFreeze("Jato", function()
+        local f = Workspace:FindFirstChild("WorkspaceCom")
+        if f and f:FindFirstChild("001_Airport") then
+            local s = f["001_Airport"]:FindFirstChild("AirportHanger")
+            if s then
+                return s:FindFirstChild("001_JetStorage") and s["001_JetStorage"]:FindFirstChild("JetAirport")
+            end
+        end
+    end)
+})
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Fling Helicóptero",
+    Default = false,
+    Callback = CreateAntiFreeze("Heli", function()
+        local f = Workspace:FindFirstChild("WorkspaceCom")
+        return f and f:FindFirstChild("001_HeliStorage") and f["001_HeliStorage"]:FindFirstChild("PoliceStationHeli")
+    end)
+})
+
+
+
+ProtectionTab:AddToggle({
+    Name = "Anti Fling Canoa",
+    Default = false,
+    Callback = CreateAntiFreeze("Canoa", function()
+        local wc = Workspace:FindFirstChild("WorkspaceCom")
+        return wc and wc:FindFirstChild("001_CanoeStorage")
+    end)
+})
+
+
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local BallConnection
+local BallBackup = {}
+
+ProtectionTab:AddToggle({
+    Name = "Anti Fling Ball (Destroy)",
+    Default = false,
+    Callback = function(state)
+
+        local function getFolder()
+            local wc = Workspace:FindFirstChild("WorkspaceCom")
+            return wc and wc:FindFirstChild("001_SoccerBalls")
+        end
+
+        if state then
+
+            BallConnection = RunService.Heartbeat:Connect(function()
+
+                local folder = getFolder()
+                if not folder then return end
+
+                for _, ball in ipairs(folder:GetChildren()) do
+                    if not BallBackup[ball] then
+                        BallBackup[ball] = ball:Clone()
+                        ball:Destroy()
+                    end
+                end
+
+            end)
+
+        else
+
+            if BallConnection then
+                BallConnection:Disconnect()
+                BallConnection = nil
+            end
+
+            local folder = getFolder()
+            if folder then
+                for _, clone in pairs(BallBackup) do
+                    clone.Parent = folder
+                end
+            end
+
+            BallBackup = {}
+
+        end
+    end
+})
+
+
+
+local DoorConnection
+local DoorOriginalState = {}
+
+ProtectionTab:AddToggle({
+    Name = "Anti Fling Portas (Freeze)",
+    Default = false,
+    Callback = function(state)
+
+        local function isDoor(name)
+            name = string.lower(name)
+            return name:find("door") or name:find("porta")
+        end
+
+        if state then
+
+            DoorConnection = game:GetService("RunService").Heartbeat:Connect(function()
+
+                for _, obj in ipairs(workspace:GetDescendants()) do
+                    if obj:IsA("BasePart") and isDoor(obj.Name) then
+                        
+                        if not DoorOriginalState[obj] then
+                            DoorOriginalState[obj] = {
+                                Anchored = obj.Anchored,
+                                CanCollide = obj.CanCollide
+                            }
+                        end
+
+                        obj.Anchored = true
+                        obj.CanCollide = true
+                    end
+                end
+
+            end)
+
+        else
+
+            if DoorConnection then
+                DoorConnection:Disconnect()
+                DoorConnection = nil
+            end
+
+            -- Restaurar estado original
+            for part, data in pairs(DoorOriginalState) do
+                if part and part.Parent then
+                    part.Anchored = data.Anchored
+                    part.CanCollide = data.CanCollide
+                end
+            end
+
+            DoorOriginalState = {}
+
+        end
+    end
+})
+
+
+
+
+local antiSitActive = false
+Tab13:AddToggle({
+    Name = "Anti Sit",
+    Description = "",
+    Default = false,
+    Callback = function(state)
+        antiSitActive = state
+        TeleportCarro:MostrarNotificacao("Anti Sit "..(state and "ativado!" or "desativado!"))
+        task.spawn(function()
+            while antiSitActive and LocalPlayer.Character do
+                local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                    if humanoid:GetState() == Enum.HumanoidStateType.Seated then
+                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                    end
+                end
+                task.wait(0.05)
+            end
+            if not antiSitActive then
+                local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+                end
+            end
+        end)
+    end
+})
 
 
 
@@ -4246,49 +4443,7 @@ ProtectionTab:AddToggle({
 
 
 
-ProtectionTab:AddToggle({
-    Name = "Anti Car",
-    Default = false,
-    Callback = function(state)
 
-        local Workspace = game:GetService("Workspace")
-        local VehiclesFolder = Workspace:FindFirstChild("Vehicles")
-
-        if not VehiclesFolder then
-            warn("Pasta Vehicles não encontrada")
-            return
-        end
-
-        if state then
-
-            ProtectionTab._AntiCarParts = {}
-
-            for _, obj in ipairs(VehiclesFolder:GetDescendants()) do
-                if obj:IsA("BasePart") then
-                    table.insert(ProtectionTab._AntiCarParts, {
-                        Part = obj,
-                        CanCollide = obj.CanCollide
-                    })
-
-                    obj.CanCollide = false
-                end
-            end
-
-        else
-
-            if ProtectionTab._AntiCarParts then
-                for _, data in ipairs(ProtectionTab._AntiCarParts) do
-                    if data.Part and data.Part.Parent then
-                        data.Part.CanCollide = data.CanCollide
-                    end
-                end
-            end
-
-            ProtectionTab._AntiCarParts = nil
-        end
-
-    end
-})
 
 ProtectionTab:AddToggle({
     Name = "Anti Void",
@@ -4371,347 +4526,14 @@ ProtectionTab:AddToggle({
 
 
 
-ProtectionTab:AddToggle({
-    Name = "Anti Boat ",
-    Default = false,
-    Callback = function(state)
 
-        local Workspace = game:GetService("Workspace")
-        local boatsFolder = Workspace:FindFirstChild("Vehicles")
 
-        if not boatsFolder then
-            warn("Vehicles não encontrado")
-            return
-        end
 
-        -- tabela pra salvar estado original
-        if not ProtectionTab._BoatCache then
-            ProtectionTab._BoatCache = {}
-        end
 
-        if state then
 
-            ProtectionTab._BoatCache = {}
 
-            for _, part in ipairs(boatsFolder:GetDescendants()) do
-                if part:IsA("BasePart") then
 
-                    ProtectionTab._BoatCache[part] = {
-                        Anchored = part.Anchored,
-                        CanCollide = part.CanCollide
-                    }
 
-                    part.Anchored = true
-                    part.CanCollide = true
-                end
-            end
-
-        else
-
-            for part, data in pairs(ProtectionTab._BoatCache) do
-                if part and part.Parent then
-                    part.Anchored = data.Anchored
-                    part.CanCollide = data.CanCollide
-                end
-            end
-
-            ProtectionTab._BoatCache = {}
-
-        end
-
-    end
-})
-
-
-
-
-
-ProtectionTab:AddToggle({
-    Name = "Anti Helicopter",
-    Default = false,
-    Callback = function(state)
-
-        local Workspace = game:GetService("Workspace")
-        local folder = Workspace:FindFirstChild("WorkspaceCom")
-        if not folder then return end
-
-        local heliStorage = folder:FindFirstChild("001_HeliStorage")
-        if not heliStorage then return end
-
-        if not ProtectionTab._HeliCache then
-            ProtectionTab._HeliCache = {}
-        end
-
-        if state then
-
-            ProtectionTab._HeliCache = {}
-
-            for _, part in ipairs(heliStorage:GetDescendants()) do
-                if part:IsA("BasePart") then
-
-                    ProtectionTab._HeliCache[part] = {
-                        Anchored = part.Anchored,
-                        CanCollide = part.CanCollide
-                    }
-
-                    part.Anchored = true
-                    part.CanCollide = true
-                end
-            end
-
-        else
-
-            for part, data in pairs(ProtectionTab._HeliCache) do
-                if part and part.Parent then
-                    part.Anchored = data.Anchored
-                    part.CanCollide = data.CanCollide
-                end
-            end
-
-            ProtectionTab._HeliCache = {}
-
-        end
-    end
-})
-
-
-
-
-
-ProtectionTab:AddToggle({
-    Name = "Anti Jet",
-    Default = false,
-    Callback = function(state)
-
-        local Workspace = game:GetService("Workspace")
-        local folder = Workspace:FindFirstChild("WorkspaceCom")
-        if not folder then return end
-
-        local airport = folder:FindFirstChild("001_Airport")
-        if not airport then return end
-
-        local hanger = airport:FindFirstChild("AirportHanger")
-        if not hanger then return end
-
-        local jetStorage = hanger:FindFirstChild("001_JetStorage")
-        if not jetStorage then return end
-
-        if not ProtectionTab._JetCache then
-            ProtectionTab._JetCache = {}
-        end
-
-        if state then
-
-            ProtectionTab._JetCache = {}
-
-            for _, part in ipairs(jetStorage:GetDescendants()) do
-                if part:IsA("BasePart") then
-
-                    ProtectionTab._JetCache[part] = {
-                        Anchored = part.Anchored,
-                        CanCollide = part.CanCollide
-                    }
-
-                    part.Anchored = true
-                    part.CanCollide = true
-                end
-            end
-
-        else
-
-            for part, data in pairs(ProtectionTab._JetCache) do
-                if part and part.Parent then
-                    part.Anchored = data.Anchored
-                    part.CanCollide = data.CanCollide
-                end
-            end
-
-            ProtectionTab._JetCache = {}
-
-        end
-    end
-})
-
-
-
-ProtectionTab:AddToggle({
-    Name = "Anti Canoe",
-    Default = false,
-    Callback = function(state)
-
-        local Workspace = game:GetService("Workspace")
-        local folder = Workspace:FindFirstChild("WorkspaceCom")
-        if not folder then return end
-
-        local canoeStorage = folder:FindFirstChild("001_CanoeStorage")
-        if not canoeStorage then return end
-
-        if not ProtectionTab._CanoeCache then
-            ProtectionTab._CanoeCache = {}
-        end
-
-        if state then
-
-            ProtectionTab._CanoeCache = {}
-
-            for _, part in ipairs(canoeStorage:GetDescendants()) do
-                if part:IsA("BasePart") then
-
-                    ProtectionTab._CanoeCache[part] = {
-                        Anchored = part.Anchored,
-                        CanCollide = part.CanCollide
-                    }
-
-                    part.Anchored = true
-                    part.CanCollide = true
-                end
-            end
-
-        else
-
-            for part, data in pairs(ProtectionTab._CanoeCache) do
-                if part and part.Parent then
-                    part.Anchored = data.Anchored
-                    part.CanCollide = data.CanCollide
-                end
-            end
-
-            ProtectionTab._CanoeCache = {}
-
-        end
-    end
-})
-
-
-
-
-ProtectionTab:AddToggle({
-    Name = "Anti Portas",
-    Default = false,
-    Callback = function(state)
-
-        local Workspace = game:GetService("Workspace")
-
-        -- Cache
-        if not ProtectionTab._DoorCache then
-            ProtectionTab._DoorCache = {}
-        end
-
-        if state then
-
-            ProtectionTab._DoorCache = {}
-
-            for _, obj in ipairs(Workspace:GetDescendants()) do
-                if obj:IsA("BasePart") and obj.Name:lower():find("door") then
-
-                    ProtectionTab._DoorCache[obj] = {
-                        Transparency = obj.Transparency,
-                        CanCollide = obj.CanCollide,
-                        CastShadow = obj.CastShadow
-                    }
-
-                    obj.Transparency = 1
-                    obj.CanCollide = false
-                    obj.CastShadow = false
-                end
-            end
-
-        else
-
-            for part, data in pairs(ProtectionTab._DoorCache) do
-                if part and part.Parent then
-                    part.Transparency = data.Transparency
-                    part.CanCollide = data.CanCollide
-                    part.CastShadow = data.CastShadow
-                end
-            end
-
-            ProtectionTab._DoorCache = {}
-
-        end
-    end
-})
-
-
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
--- Controle interno
-local antiSitEnabled = false
-local humanoidConn = nil
-local characterConn = nil
-
--- Função que aplica no humanoid
-local function setupHumanoid(hum)
-    if not hum then return end
-
-    -- Garante que nunca sente
-    hum.Sit = false
-    hum:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-
-    -- Remove conexão antiga
-    if humanoidConn then
-        humanoidConn:Disconnect()
-        humanoidConn = nil
-    end
-
-    humanoidConn = hum.Seated:Connect(function(isSeated)
-        if isSeated and antiSitEnabled then
-            hum.Sit = false
-            hum:ChangeState(Enum.HumanoidStateType.GettingUp)
-        end
-    end)
-end
-
--- Função que aplica no personagem
-local function applyToCharacter(character)
-    local hum = character:WaitForChild("Humanoid", 5)
-    if hum then
-        setupHumanoid(hum)
-    end
-end
-
-ProtectionTab:AddToggle({
-    Name = "Anti-Sit",
-    Default = false,
-    Callback = function(state)
-        antiSitEnabled = state
-
-        if state then
-
-            -- Aplica se já estiver spawnado
-            if LocalPlayer.Character then
-                applyToCharacter(LocalPlayer.Character)
-            end
-
-            -- Reconecta apenas 1 vez
-            if not characterConn then
-                characterConn = LocalPlayer.CharacterAdded:Connect(function(char)
-                    if antiSitEnabled then
-                        applyToCharacter(char)
-                    end
-                end)
-            end
-
-        else
-
-            -- Desativa humanoid atual
-            if LocalPlayer.Character then
-                local hum = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                if hum then
-                    hum:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-                end
-            end
-
-            -- Limpa conexão do humanoid
-            if humanoidConn then
-                humanoidConn:Disconnect()
-                humanoidConn = nil
-            end
-
-        end
-    end
-})
 
 
 
