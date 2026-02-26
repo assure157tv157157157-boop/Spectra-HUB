@@ -4359,91 +4359,16 @@ ProtectionTab:AddToggle({
 })
 
 
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
+local LocalPlayer = Players.LocalPlayer
 
-local antiSitActive = false
-Tab13:AddToggle({
-    Name = "Anti Sit",
-    Description = "",
-    Default = false,
-    Callback = function(state)
-        antiSitActive = state
-        TeleportCarro:MostrarNotificacao("Anti Sit "..(state and "ativado!" or "desativado!"))
-        task.spawn(function()
-            while antiSitActive and LocalPlayer.Character do
-                local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-                    if humanoid:GetState() == Enum.HumanoidStateType.Seated then
-                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-                    end
-                end
-                task.wait(0.05)
-            end
-            if not antiSitActive then
-                local humanoid = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-                end
-            end
-        end)
-    end
-})
+local VoidConnection
+local PositionHistory = {}
 
-
-
-ProtectionTab:AddToggle({
-    Name = "Anti Teleport",
-    Default = false,
-    Callback = function(state)
-
-        if state then
-
-            local lastPosition
-            local connection
-
-            connection = game:GetService("RunService").Heartbeat:Connect(function()
-
-                local char = game.Players.LocalPlayer.Character
-                if not char then return end
-
-                local root = char:FindFirstChild("HumanoidRootPart")
-                if not root then return end
-
-                if not lastPosition then
-                    lastPosition = root.Position
-                    return
-                end
-
-                local distance = (root.Position - lastPosition).Magnitude
-
-                if distance > 80 then
-                    root.CFrame = CFrame.new(lastPosition)
-                    root.AssemblyLinearVelocity = Vector3.zero
-                    root.AssemblyAngularVelocity = Vector3.zero
-                else
-                    lastPosition = root.Position
-                end
-
-            end)
-
-            -- guarda conexão dentro do toggle
-            ProtectionTab._AntiTeleportConnection = connection
-
-        else
-
-            if ProtectionTab._AntiTeleportConnection then
-                ProtectionTab._AntiTeleportConnection:Disconnect()
-                ProtectionTab._AntiTeleportConnection = nil
-            end
-
-        end
-    end
-})
-
-
-
-
+local MAX_HISTORY_TIME = 20 -- segundos
+local VOID_LIMIT = -500 -- altura do void
 
 ProtectionTab:AddToggle({
     Name = "Anti Void",
@@ -4452,72 +4377,51 @@ ProtectionTab:AddToggle({
 
         if state then
 
-            local RunService = game:GetService("RunService")
-            local LocalPlayer = game.Players.LocalPlayer
+            VoidConnection = RunService.Heartbeat:Connect(function(dt)
 
-            local lastSafePosition = nil
-            local lastY = nil
-            local emergencyMode = false
+                if not LocalPlayer.Character then return end
 
-            local connection
+                local hrp = LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+                local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
 
-            connection = RunService.Heartbeat:Connect(function()
+                if not hrp or not humanoid then return end
 
-                local char = LocalPlayer.Character
-                if not char then return end
+                -- 🔹 Salva posição atual com timestamp
+                table.insert(PositionHistory, {
+                    time = tick(),
+                    position = hrp.Position
+                })
 
-                local root = char:FindFirstChild("HumanoidRootPart")
-                if not root then return end
-
-                local currentY = root.Position.Y
-
-                -- Salva posição segura (quando está acima de -50)
-                if currentY > -50 then
-                    lastSafePosition = root.Position
-                    emergencyMode = false
-                end
-
-                -- Detecta queda brusca
-                if lastY then
-                    local deltaY = currentY - lastY
-
-                    if deltaY < -100 then
-                        -- Caiu muito rápido
-                        if lastSafePosition then
-                            root.CFrame = CFrame.new(lastSafePosition + Vector3.new(0,5,0))
-                            root.AssemblyLinearVelocity = Vector3.zero
-                            root.AssemblyAngularVelocity = Vector3.zero
-                        end
+                -- 🔹 Remove posições antigas (mais de 20s)
+                for i = #PositionHistory, 1, -1 do
+                    if tick() - PositionHistory[i].time > MAX_HISTORY_TIME then
+                        table.remove(PositionHistory, i)
                     end
                 end
 
-                lastY = currentY
+                -- 🔹 Se cair no void
+                if hrp.Position.Y < VOID_LIMIT then
 
-                -- Se ainda estiver muito abaixo, ativa modo emergência
-                if currentY < -120 then
-                    emergencyMode = true
-                end
+                    -- procura posição mais antiga guardada (20s atrás)
+                    local safePosition = PositionHistory[1]
 
-                -- 🚨 MODO OH MY GOD 🚨
-                if emergencyMode then
-                    root.AssemblyLinearVelocity = Vector3.new(0,150,0)
-
-                    if root.Position.Y > -20 then
-                        emergencyMode = false
-                        root.AssemblyLinearVelocity = Vector3.zero
+                    if safePosition then
+                        hrp.CFrame = CFrame.new(safePosition.position + Vector3.new(0,5,0))
+                        hrp.Velocity = Vector3.zero
                     end
+
                 end
 
             end)
 
-            ProtectionTab._AntiVoidConnection = connection
-
         else
 
-            if ProtectionTab._AntiVoidConnection then
-                ProtectionTab._AntiVoidConnection:Disconnect()
-                ProtectionTab._AntiVoidConnection = nil
+            if VoidConnection then
+                VoidConnection:Disconnect()
+                VoidConnection = nil
             end
+
+            PositionHistory = {}
 
         end
     end
