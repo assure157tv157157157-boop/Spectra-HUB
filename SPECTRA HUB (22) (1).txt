@@ -3950,6 +3950,13 @@ local Phonk = {
 ["montagem link 30!"] = "120189561947098",
 ["montagem enlouquecer"] = "121703297529684",
 ["montagem bailão"] = "129071695986627",
+["tomagi mo tão"] = "111668097052966",
+["Batalla de bombas"] = "71995582569283",
+["Another hiit"] = "99731755429975",
+["Want To Love"] = "104846670980072",
+["Onichan"] = "17422156627",
+["gol contra"] = "122114766584918",
+["Trying To finde"] = "132643763204246",
 ["Montagem Sinistra Dz7"] = "78098390943739"
 }
 
@@ -4006,15 +4013,24 @@ local Funk = {
 ["pixel"] = "93928823862203",
 ["viagem sonora"] = "79349174602261",
 ["sequência"] = "121187736532042",
+["Fuga Na Viatura"] = "131891110268352",
 ["Penélope"] = "97011217688307",
 ["eu já tava bem 😭"] = "93590122047380",
+["Oruan - Sou Teu fã"] = "85342086082111",
+["Grelo So fé"] = "72200166265935",
 ["Melodia Funk"] = "83064304128519",
+["Poze Cv"] = "124244582950595",
+["beats"] = "16190782181",
+["Soldado Guerreiro"] = "71590664026646",
+["bao"] = "89789578077519",
 ["Uniao Flasco"] = "100989716917693"
 }
 
 local Forro = {
 ["Em breve mais músicas"] = "",
 ["forró ja cansou"] = "74812784884330",
+["escolha certa"] = "107088620814881",
+["lembro ate hoje"] = "71531533552899",
 ["forró da resenha"] = "120973520531216"
 }
 
@@ -4022,34 +4038,19 @@ local Aleatorio = {
 ["Em breve mais músicas"] = "",
 ["Carro do Ovos"] = "3148329638",
 ["confession"] = "92992163303925",
-["Trying To finde"] = "132643763204246",
-["Batalla de bombas"] = "71995582569283",
-["Another hiit"] = "99731755429975",
 ["fa3 renitch"] = "128934903242385",
 ["Kawaii"] = "13067828528278",
 ["Feeling"] = "120764084521465",
 ["Aura + Egp"] = "97841988407875",
-["tomagi mo tão"] = "111668097052966",
 ["The Twelve"] = "126153082683694",
-["beats"] = "16190782181",
 ["Samba"] = "1836175030",
 ["Samba2"] = "1838888602",
 ["Banka"] = "16190784229",
-["Want To Love"] = "104846670980072",
 ["Blassed Mane"] = "16831108393",
-["Onichan"] = "17422156627",
 ["hoodtrap"] = "73685038553576",
 ["I love you so"] = "98364034458260",
-["Poze Cv"] = "124244582950595",
 ["Trap"] = "131582258401093",
-["Oruan - Sou Teu fã"] = "85342086082111",
-["Soldado Guerreiro"] = "71590664026646",
-["Fuga Na Viatura"] = "131891110268352",
-["gol contra"] = "122114766584918",
 ["Anxiety"] = "101483901475189",
-["Grelo So fé"] = "72200166265935",
-["escolha certa"] = "107088620814881",
-["lembro ate hoje"] = "71531533552899",
 ["Nooo"] = "73685038553576",
 ["tuber 93"] = "1839246711"
 }
@@ -4130,7 +4131,6 @@ MusicTab:AddButton({
         end
     end
 })
-
 
 
 
