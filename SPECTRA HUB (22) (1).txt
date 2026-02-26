@@ -4214,7 +4214,7 @@ ProtectionTab:AddToggle({
 
 
 ProtectionTab:AddToggle({
-    Name = "Anti Fling Jato",
+    Name = "Anti Fling Jat",
     Default = false,
     Callback = CreateAntiFreeze("Jato", function()
         local f = Workspace:FindFirstChild("WorkspaceCom")
@@ -4256,7 +4256,7 @@ local BallConnection
 local BallBackup = {}
 
 ProtectionTab:AddToggle({
-    Name = "Anti Fling Ball (Destroy)",
+    Name = "Anti Fling Ball",
     Default = false,
     Callback = function(state)
 
@@ -4303,60 +4303,6 @@ ProtectionTab:AddToggle({
 
 
 
-local DoorConnection
-local DoorOriginalState = {}
-
-ProtectionTab:AddToggle({
-    Name = "Anti Fling Portas (Freeze)",
-    Default = false,
-    Callback = function(state)
-
-        local function isDoor(name)
-            name = string.lower(name)
-            return name:find("door") or name:find("porta")
-        end
-
-        if state then
-
-            DoorConnection = game:GetService("RunService").Heartbeat:Connect(function()
-
-                for _, obj in ipairs(workspace:GetDescendants()) do
-                    if obj:IsA("BasePart") and isDoor(obj.Name) then
-                        
-                        if not DoorOriginalState[obj] then
-                            DoorOriginalState[obj] = {
-                                Anchored = obj.Anchored,
-                                CanCollide = obj.CanCollide
-                            }
-                        end
-
-                        obj.Anchored = true
-                        obj.CanCollide = true
-                    end
-                end
-
-            end)
-
-        else
-
-            if DoorConnection then
-                DoorConnection:Disconnect()
-                DoorConnection = nil
-            end
-
-            -- Restaurar estado original
-            for part, data in pairs(DoorOriginalState) do
-                if part and part.Parent then
-                    part.Anchored = data.Anchored
-                    part.CanCollide = data.CanCollide
-                end
-            end
-
-            DoorOriginalState = {}
-
-        end
-    end
-})
 
 
 local Players = game:GetService("Players")
@@ -4367,8 +4313,8 @@ local LocalPlayer = Players.LocalPlayer
 local VoidConnection
 local PositionHistory = {}
 
-local MAX_HISTORY_TIME = 20 -- segundos
-local VOID_LIMIT = -500 -- altura do void
+local MAX_HISTORY_TIME = 4 -- segundos
+local VOID_LIMIT = -369 -- altura do void
 
 ProtectionTab:AddToggle({
     Name = "Anti Void",
@@ -4427,10 +4373,71 @@ ProtectionTab:AddToggle({
     end
 })
 
+Tab14:AddSection({ "esse botão é para deixar o seu jogo mais leve " })
 
 
+local ParticlesDisabled = false
+local SavedParticles = {}
+local ParticleConnection
 
+local function DisableParticle(obj)
+    if obj:IsA("ParticleEmitter")
+    or obj:IsA("Trail")
+    or obj:IsA("Beam")
+    or obj:IsA("Smoke")
+    or obj:IsA("Fire")
+    or obj:IsA("Sparkles") then
 
+        if not SavedParticles[obj] then
+            SavedParticles[obj] = obj.Enabled
+            obj.Enabled = false
+        end
+    end
+end
+
+local function RestoreParticles()
+    for obj, originalState in pairs(SavedParticles) do
+        if obj and obj.Parent then
+            obj.Enabled = originalState
+        end
+    end
+    SavedParticles = {}
+end
+
+ProtectionTab:AddButton({
+    Name = "Anti leg",
+    Callback = function()
+
+        ParticlesDisabled = not ParticlesDisabled
+
+        if ParticlesDisabled then
+            
+            -- Desativa partículas existentes
+            for _, obj in ipairs(workspace:GetDescendants()) do
+                DisableParticle(obj)
+            end
+
+            -- Desativa partículas novas que aparecerem
+            ParticleConnection = workspace.DescendantAdded:Connect(function(obj)
+                DisableParticle(obj)
+            end)
+
+            print("Partículas desativadas")
+
+        else
+
+            if ParticleConnection then
+                ParticleConnection:Disconnect()
+                ParticleConnection = nil
+            end
+
+            RestoreParticles()
+
+            print("Partículas restauradas")
+
+        end
+    end
+})
 
 
 
