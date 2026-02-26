@@ -77,9 +77,7 @@ local webhookData = {
                 {name = '🌍 País do player', value = "📍" .. country, inline = true},
                 
                 {name = '📅 Idade da Conta', value = accountAge .. " dias", inline = true},
-                {name = '👥 Amigos da conta', value = tostring(friendCount), inline = true},
-                {name = '📉 Seguidores da conta', value = tostring(followerCount), inline = true},
-                
+
                 {name = '🎮 quandos players tem no servidor', value = serverPopulation, inline = true},
                 {name = '🔒 Tipo de Servidor público/privado', value = serverType, inline = true},
                 {name = '💻 Executor', value = identifyexecutor() or "Desconhecido", inline = true},
