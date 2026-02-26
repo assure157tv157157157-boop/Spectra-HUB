@@ -4373,79 +4373,82 @@ ProtectionTab:AddToggle({
     end
 })
 
-Tab14:AddSection({ "esse botão é para deixar o seu jogo mais leve " })
 
 
-local ParticlesDisabled = false
-local SavedParticles = {}
-local ParticleConnection
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
 
-local function DisableParticle(obj)
-    if obj:IsA("ParticleEmitter")
-    or obj:IsA("Trail")
-    or obj:IsA("Beam")
-    or obj:IsA("Smoke")
-    or obj:IsA("Fire")
-    or obj:IsA("Sparkles") then
+local LocalPlayer = Players.LocalPlayer
 
-        if not SavedParticles[obj] then
-            SavedParticles[obj] = obj.Enabled
-            obj.Enabled = false
+local AntiSitConnection
+local CharacterConnection
+
+local function EnableAntiSit(character)
+
+    local humanoid = character:WaitForChild("Humanoid", 5)
+    if not humanoid then return end
+
+    -- Desativa estado de sentar
+    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+
+    -- Loop leve para remover qualquer tentativa de sentar
+    AntiSitConnection = RunService.Heartbeat:Connect(function()
+
+        if humanoid.SeatPart then
+            humanoid.Sit = false
+            humanoid:ChangeState(Enum.HumanoidStateType.Running)
         end
-    end
+
+        if humanoid:GetState() == Enum.HumanoidStateType.Seated then
+            humanoid:ChangeState(Enum.HumanoidStateType.Running)
+        end
+
+    end)
+
 end
 
-local function RestoreParticles()
-    for obj, originalState in pairs(SavedParticles) do
-        if obj and obj.Parent then
-            obj.Enabled = originalState
-        end
+local function DisableAntiSit(character)
+
+    local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
     end
-    SavedParticles = {}
+
+    if AntiSitConnection then
+        AntiSitConnection:Disconnect()
+        AntiSitConnection = nil
+    end
+
 end
 
-ProtectionTab:AddButton({
-    Name = "Anti leg",
-    Callback = function()
+ProtectionTab:AddToggle({
+    Name = "Anti Sit",
+    Default = false,
+    Callback = function(state)
 
-        ParticlesDisabled = not ParticlesDisabled
+        if state then
 
-        if ParticlesDisabled then
-            
-            -- Desativa partículas existentes
-            for _, obj in ipairs(workspace:GetDescendants()) do
-                DisableParticle(obj)
+            if LocalPlayer.Character then
+                EnableAntiSit(LocalPlayer.Character)
             end
 
-            -- Desativa partículas novas que aparecerem
-            ParticleConnection = workspace.DescendantAdded:Connect(function(obj)
-                DisableParticle(obj)
+            CharacterConnection = LocalPlayer.CharacterAdded:Connect(function(char)
+                EnableAntiSit(char)
             end)
-
-            print("Partículas desativadas")
 
         else
 
-            if ParticleConnection then
-                ParticleConnection:Disconnect()
-                ParticleConnection = nil
+            if CharacterConnection then
+                CharacterConnection:Disconnect()
+                CharacterConnection = nil
             end
 
-            RestoreParticles()
-
-            print("Partículas restauradas")
+            DisableAntiSit(LocalPlayer.Character)
 
         end
+
     end
 })
-
-
-
-
-
-
-
-
 
 
 
