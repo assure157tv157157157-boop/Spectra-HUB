@@ -458,140 +458,222 @@ PlayerTab:AddToggle({
     end
 })
 
---////////////////////////////////////////////////////
---// ESP COMPLETO
+
 PlayerTab:AddSection({ "ESP" })
 
-local ESPEnabled = false
-local ESPColorMode = "RGB"
-local ESPObjects = {}
-local ESPConnections = {}
+-- ===============================
+-- ESP GLOBAL DATA
+-- ===============================
+_G.ESPData = _G.ESPData or {
+    espEnabled = false,
+    espType = "Nome + Idade",
+    selectedColor = "RGB",
+    billboardGuis = {},
+    highlights = {},
+    lines = {},
+    connections = {}
+}
 
-PlayerTab:AddDropdown({
-    Name = "ESP Color",
-    Default = "RGB",
-    Options = {
-        "RGB","Branco","Preto","Vermelho",
-        "Verde","Azul","Amarelo","Rosa","Roxo"
-    },
-    Callback = function(v)
-        ESPColorMode = v
-    end
-})
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
 
+-- ===============================
+-- FUNCÃƒO DE COR
+-- ===============================
 local function getESPColor()
-    if ESPColorMode == "RGB" then
-        return Color3.fromHSV((tick()%5)/5,1,1)
-    elseif ESPColorMode == "Branco" then
-        return Color3.fromRGB(255,255,255)
-    elseif ESPColorMode == "Preto" then
-        return Color3.fromRGB(0,0,0)
-    elseif ESPColorMode == "Vermelho" then
-        return Color3.fromRGB(255,0,0)
-    elseif ESPColorMode == "Verde" then
-        return Color3.fromRGB(0,255,0)
-    elseif ESPColorMode == "Azul" then
-        return Color3.fromRGB(0,170,255)
-    elseif ESPColorMode == "Amarelo" then
-        return Color3.fromRGB(255,255,0)
-    elseif ESPColorMode == "Rosa" then
-        return Color3.fromRGB(255,105,180)
-    elseif ESPColorMode == "Roxo" then
-        return Color3.fromRGB(128,0,128)
-    end
-    return Color3.new(1,1,1)
+    local colors = {
+        RGB = function()
+            local h = (tick() % 5) / 5
+            return Color3.fromHSV(h, 1, 1)
+        end,
+        Preto = Color3.fromRGB(0,0,0),
+        Branco = Color3.fromRGB(255,255,255),
+        Vermelho = Color3.fromRGB(255,0,0),
+        Verde = Color3.fromRGB(0,255,0),
+        Azul = Color3.fromRGB(0,170,255),
+        Amarelo = Color3.fromRGB(255,255,0),
+        Rosa = Color3.fromRGB(255,105,180),
+        Roxo = Color3.fromRGB(128,0,128)
+    }
+
+    local c = colors[_G.ESPData.selectedColor]
+    return type(c) == "function" and c() or c or Color3.new(1,1,1)
 end
 
-local function RemoveESP(player)
-    if ESPObjects[player] then
-        ESPObjects[player]:Destroy()
-        ESPObjects[player] = nil
+-- ===============================
+-- LIMPAR ESP
+-- ===============================
+_G.clearAllESP = function()
+    for _, gui in pairs(_G.ESPData.billboardGuis) do
+        pcall(function() gui:Destroy() end)
     end
+    for _, h in pairs(_G.ESPData.highlights) do
+        pcall(function() h:Destroy() end)
+    end
+    for _, l in pairs(_G.ESPData.lines) do
+        pcall(function() l:Remove() end)
+    end
+    for _, c in pairs(_G.ESPData.connections) do
+        pcall(function() c:Disconnect() end)
+    end
+
+    _G.ESPData.billboardGuis = {}
+    _G.ESPData.highlights = {}
+    _G.ESPData.lines = {}
+    _G.ESPData.connections = {}
 end
 
-local function CreateESP(player)
-    if player == LocalPlayer then return end
-    if not ESPEnabled then return end
-    if not player.Character then return end
+-- ===============================
+-- CRIAR ESPs
+-- ===============================
+local function createNameESP(player)
+    if player == Players.LocalPlayer then return end
+    if not player.Character or not player.Character:FindFirstChild("Head") then return end
 
-    local head = player.Character:FindFirstChild("Head")
-    if not head then return end
+    local head = player.Character.Head
+    if _G.ESPData.billboardGuis[player] then
+        _G.ESPData.billboardGuis[player]:Destroy()
+    end
 
-    RemoveESP(player)
-
-    local gui = Instance.new("BillboardGui")
-    gui.Name = "ESP"
-    gui.Size = UDim2.new(0,220,0,45)
+    local gui = Instance.new("BillboardGui", head)
+    gui.Size = UDim2.new(0,200,0,50)
     gui.StudsOffset = Vector3.new(0,3,0)
     gui.AlwaysOnTop = true
-    gui.Adornee = head
-    gui.Parent = head
 
-    local txt = Instance.new("TextLabel")
+    local txt = Instance.new("TextLabel", gui)
     txt.Size = UDim2.new(1,0,1,0)
     txt.BackgroundTransparency = 1
-    txt.TextStrokeTransparency = 0.4
+    txt.TextStrokeTransparency = 0.5
     txt.Font = Enum.Font.SourceSansBold
     txt.TextSize = 14
     txt.Text = player.Name.." | "..player.AccountAge.." dias"
     txt.TextColor3 = getESPColor()
-    txt.Parent = gui
 
-    ESPObjects[player] = gui
+    _G.ESPData.billboardGuis[player] = gui
 end
 
-PlayerTab:AddToggle({
-    Name = "ESP On/Off",
-    Default = false,
-    Callback = function(state)
-        ESPEnabled = state
+local function createHighlightESP(player)
+    if player == Players.LocalPlayer then return end
+    if not player.Character then return end
 
-        if state then
-            for _,p in ipairs(Players:GetPlayers()) do
-                CreateESP(p)
-            end
+    if _G.ESPData.highlights[player] then
+        _G.ESPData.highlights[player]:Destroy()
+    end
 
-            table.insert(ESPConnections, Players.PlayerAdded:Connect(function(p)
-                p.CharacterAdded:Connect(function()
-                    task.wait(0.4)
-                    CreateESP(p)
-                end)
-            end))
+    local h = Instance.new("Highlight", player.Character)
+    h.FillColor = getESPColor()
+    h.FillTransparency = 0.5
+    h.OutlineTransparency = 0
+    h.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
 
-            table.insert(ESPConnections, Players.PlayerRemoving:Connect(function(p)
-                RemoveESP(p)
-            end))
+    _G.ESPData.highlights[player] = h
+end
 
+local function createLineESP(player)
+    if player == Players.LocalPlayer then return end
+    if _G.ESPData.lines[player] then
+        pcall(function() _G.ESPData.lines[player]:Remove() end)
+    end
 
-            table.insert(ESPConnections, Players.PlayerRemoving:Connect(function(p)
-                RemoveESP(p)
-            end))
+    local l = Drawing.new("Line")
+    l.Thickness = 2
+    l.Transparency = 1
+    l.Visible = false
 
-            table.insert(ESPConnections, RunService.RenderStepped:Connect(function()
-                if ESPColorMode == "RGB" then
-                    for _,gui in pairs(ESPObjects) do
-                        local txt = gui:FindFirstChildOfClass("TextLabel")
-                        if txt then
-                            txt.TextColor3 = getESPColor()
-                        end
+    _G.ESPData.lines[player] = l
+end
+
+-- ===============================
+-- APLICAR ESP
+-- ===============================
+_G.applyCurrentESP = function()
+    _G.clearAllESP()
+    if not _G.ESPData.espEnabled then return end
+
+    for _, p in pairs(Players:GetPlayers()) do
+        if _G.ESPData.espType == "Nome + Idade" then
+            createNameESP(p)
+        elseif _G.ESPData.espType == "Corpo (Highlight)" then
+            createHighlightESP(p)
+        elseif _G.ESPData.espType == "Linhas" then
+            createLineESP(p)
+        end
+    end
+
+    -- RGB / UPDATE
+    table.insert(_G.ESPData.connections,
+        RunService.RenderStepped:Connect(function()
+            if not _G.ESPData.espEnabled then return end
+            local color = getESPColor()
+
+            if _G.ESPData.espType == "Nome + Idade" then
+                for _, gui in pairs(_G.ESPData.billboardGuis) do
+                    if gui:FindFirstChildOfClass("TextLabel") then
+                        gui.TextLabel.TextColor3 = color
                     end
                 end
-            end))
-        else
-            for _,gui in pairs(ESPObjects) do
-                gui:Destroy()
-            end
-            ESPObjects = {}
 
-            for _,c in pairs(ESPConnections) do
-                c:Disconnect()
+            elseif _G.ESPData.espType == "Corpo (Highlight)" then
+                for _, h in pairs(_G.ESPData.highlights) do
+                    h.FillColor = color
+                end
+
+            elseif _G.ESPData.espType == "Linhas" then
+                for p, l in pairs(_G.ESPData.lines) do
+                    if p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
+                        local pos, on = Camera:WorldToViewportPoint(p.Character.HumanoidRootPart.Position)
+                        l.Visible = on
+                        if on then
+                            l.From = Vector2.new(Camera.ViewportSize.X/2, Camera.ViewportSize.Y)
+                            l.To = Vector2.new(pos.X, pos.Y)
+                            l.Color = color
+                        end
+                    else
+                        l.Visible = false
+                    end
+                end
             end
-            ESPConnections = {}
+        end)
+    )
+end
+
+-- ===============================
+-- UI CALLBACKS
+-- ===============================
+PlayerTab:AddDropdown({
+    Name = "Tipo de ESP",
+    Options = {"Nome + Idade","Corpo (Highlight)","Linhas"},
+    Default = "Nome + Idade",
+    Callback = function(v)
+        _G.ESPData.espType = v
+        if _G.ESPData.espEnabled then
+            _G.applyCurrentESP()
         end
     end
 })
 
+PlayerTab:AddDropdown({
+    Name = "Cor do ESP",
+    Options = {"RGB","Branco","Preto","Vermelho","Verde","Azul","Amarelo","Rosa","Roxo"},
+    Default = "RGB",
+    Callback = function(v)
+        _G.ESPData.selectedColor = v
+    end
+})
 
+PlayerTab:AddToggle({
+    Name = "ESP Ativado",
+    Default = false,
+    Callback = function(v)
+        _G.ESPData.espEnabled = v
+        if v then
+            _G.applyCurrentESP()
+        else
+            _G.clearAllESP()
+        end
+    end
+})
 
 
 --////////////////////////////////////////////////////
