@@ -2376,6 +2376,474 @@ print("Speed Car / Speed Boat ForÃ§ado | Turbo Car OK")
 
 
 
+--// ===============================
+--// ABA SKINS - COPY AVATAR REAL
+--// ===============================
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Remotes = ReplicatedStorage:WaitForChild("Remotes")
+local plr = Players.LocalPlayer
+
+-- CRIAR ABA
+local SkinsTab = Window:MakeTab({
+    Title = "Skins",
+    Icon = "rbxassetid://105837152438777"
+})
+
+SkinsTab:AddSection({ "Copy avatar" })
+
+-- ===============================
+-- DROPDOWN (MESMO SISTEMA DO TROLL)
+-- ===============================
+
+local selectedSkinPlayer = nil
+local skinDropdown
+
+local function getPlayersSkins()
+    local t = {}
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= plr then
+            table.insert(t, p.Name)
+        end
+    end
+    return t
+end
+
+skinDropdown = SkinsTab:AddDropdown({
+    Name = "Escolher Player",
+    Options = {},
+    Callback = function(v)
+        selectedSkinPlayer = v
+    end
+})
+
+local function refreshSkinDropdown()
+    local players = getPlayersSkins()
+    skinDropdown:Set(players)
+
+    if selectedSkinPlayer and not Players:FindFirstChild(selectedSkinPlayer) then  
+        selectedSkinPlayer = nil  
+        skinDropdown:Set("")  
+    end
+end
+
+refreshSkinDropdown()
+
+SkinsTab:AddButton({
+    Name = "Atualizar Lista",
+    Callback = refreshSkinDropdown
+})
+
+-- ===============================
+-- BOTÃO COPY AVATAR (IGUAL AO SCRIPT ORIGINAL)
+-- ===============================
+
+SkinsTab:AddButton({
+    Name = "Copiar Avatar",
+    Callback = function()
+        if not selectedSkinPlayer then return end
+
+        local LP = Players.LocalPlayer  
+        local LChar = LP.Character  
+        local TPlayer = Players:FindFirstChild(selectedSkinPlayer)  
+
+        if not (LChar and TPlayer and TPlayer.Character) then return end  
+
+        local LHumanoid = LChar:FindFirstChildOfClass("Humanoid")  
+        local THumanoid = TPlayer.Character:FindFirstChildOfClass("Humanoid")  
+        if not (LHumanoid and THumanoid) then return end  
+
+        -- ==================================  
+        -- RESET TOTAL DO LOCALPLAYER  
+        -- ==================================  
+        local LDesc = LHumanoid:GetAppliedDescription()  
+
+        -- REMOVER ACESSÓRIOS  
+        for _, acc in ipairs(LDesc:GetAccessories(true)) do  
+            if acc.AssetId and tonumber(acc.AssetId) then  
+                Remotes.Wear:InvokeServer(tonumber(acc.AssetId))  
+                task.wait(0.2)  
+            end  
+        end  
+
+        -- REMOVER ROUPAS  
+        if tonumber(LDesc.Shirt) then  
+            Remotes.Wear:InvokeServer(tonumber(LDesc.Shirt))  
+            task.wait(0.2)  
+        end  
+
+        if tonumber(LDesc.Pants) then  
+            Remotes.Wear:InvokeServer(tonumber(LDesc.Pants))  
+            task.wait(0.2)  
+        end  
+
+        -- REMOVER FACE  
+        if tonumber(LDesc.Face) then  
+            Remotes.Wear:InvokeServer(tonumber(LDesc.Face))  
+            task.wait(0.2)  
+        end  
+
+        -- ==================================  
+        -- COPIAR DO PLAYER ALVO  
+        -- ==================================  
+        local PDesc = THumanoid:GetAppliedDescription()  
+
+        -- PARTES DO CORPO (FORMATO EXATO)  
+        local argsBody = {  
+            [1] = {  
+                [1] = PDesc.Torso,  
+                [2] = PDesc.RightArm,  
+                [3] = PDesc.LeftArm,  
+                [4] = PDesc.RightLeg,  
+                [5] = PDesc.LeftLeg,  
+                [6] = PDesc.Head  
+            }  
+        }  
+        Remotes.ChangeCharacterBody:InvokeServer(unpack(argsBody))  
+        task.wait(0.5)  
+
+        -- ROUPAS  
+        if tonumber(PDesc.Shirt) then  
+            Remotes.Wear:InvokeServer(tonumber(PDesc.Shirt))  
+            task.wait(0.3)  
+        end  
+
+        if tonumber(PDesc.Pants) then  
+            Remotes.Wear:InvokeServer(tonumber(PDesc.Pants))  
+            task.wait(0.3)  
+        end  
+
+        -- FACE  
+        if tonumber(PDesc.Face) then  
+            Remotes.Wear:InvokeServer(tonumber(PDesc.Face))  
+            task.wait(0.3)  
+        end  
+
+        -- ACESSÓRIOS  
+        for _, v in ipairs(PDesc:GetAccessories(true)) do  
+            if v.AssetId and tonumber(v.AssetId) then  
+                Remotes.Wear:InvokeServer(tonumber(v.AssetId))  
+                task.wait(0.3)  
+            end  
+        end  
+
+        -- COR DO CORPO  
+        local SkinColor = TPlayer.Character:FindFirstChild("Body Colors")  
+        if SkinColor then  
+            Remotes.ChangeBodyColor:FireServer(tostring(SkinColor.HeadColor))  
+            task.wait(0.3)  
+        end  
+
+        -- ANIMAÇÃO IDLE  
+        if tonumber(PDesc.IdleAnimation) then  
+            Remotes.Wear:InvokeServer(tonumber(PDesc.IdleAnimation))  
+            task.wait(0.3)  
+        end  
+    end
+})
+
+SkinsTab:AddSection({ "Trocar Pernas" })
+
+--==================================================
+-- FUNÇÃO BASE (NÃO MEXER)
+--==================================================
+local function ApplyLeg(rightLegId, leftLegId)
+    local player = Players.LocalPlayer
+    local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+    if not humanoid then return end
+
+    local desc = humanoid:GetAppliedDescription()  
+
+    Remotes.ChangeCharacterBody:InvokeServer({  
+        desc.Torso,  
+        desc.RightArm,  
+        desc.LeftArm,  
+        rightLegId or desc.RightLeg,  
+        leftLegId or desc.LeftLeg,  
+        0  
+    })
+end
+
+--==================================================
+-- LISTA DE PERNAS (FÁCIL DE EDITAR)
+--==================================================
+local LEGS = {
+    { name = "Zumbi",        id = 37754710,      type = "Right" },
+    { name = "Gelo",         id = 139572789,     type = "Left" },
+    { name = "Pau",          id = 14498289771,   type = "Right" },
+    { name = "Osso Preto",   id = 14547141130,   type = "Right" },
+    { name = "Osso",         id = 14681538960,   type = "Right" },
+    { name = "RGB",          id = 14533417546,   type = "Right" },
+    { name = "Fina",         id = 79274727445827,type = "Right" },
+    { name = "Invisível",    id = 14532583517,   type = "Right" },
+}
+
+--==================================================
+-- CRIAR LISTA AUTOMÁTICA PARA DROPDOWN
+--==================================================
+local LegNames = {}
+for _, leg in ipairs(LEGS) do
+    table.insert(LegNames, leg.name)
+end
+
+--==================================================
+-- DROPDOWN INTELIGENTE
+--==================================================
+SkinsTab:AddDropdown({
+    Name = "Escolher Perna",
+    Options = LegNames,
+    Callback = function(selectedName)
+        for _, leg in ipairs(LEGS) do  
+            if leg.name == selectedName then  
+                if leg.type == "Right" then  
+                    ApplyLeg(leg.id, nil)  
+                elseif leg.type == "Left" then  
+                    ApplyLeg(nil, leg.id)  
+                end  
+                break  
+            end  
+        end  
+    end
+})
+
+SkinsTab:AddSection("Effects Avatar")
+
+local ApplyEmmiter = Remotes:WaitForChild("ApplyEmmiter")
+
+--==================================================
+-- FUNÇÃO BASE
+--==================================================
+local function CreateEffectDropdown(title, effectTable)
+    local options = {}  
+    for _, effect in ipairs(effectTable) do  
+        table.insert(options, effect.name)  
+    end  
+
+    SkinsTab:AddDropdown({  
+        Name = title,  
+        Options = options,  
+        Callback = function(selected)  
+            for _, effect in ipairs(effectTable) do  
+                if effect.name == selected then  
+                    ApplyEmmiter:InvokeServer(effect.id, effect.code)  
+                    break  
+                end  
+            end  
+        end  
+    })
+end
+
+--==================================================
+-- FOGO
+--==================================================
+CreateEffectDropdown("Fogo", {
+    {name = "Branco",  id = "18637074370", code = "030FireWhite"},
+    {name = "Laranja", id = "18637025451", code = "031FireOrange"},
+    {name = "Verde",   id = "18637078598", code = "032FireGreen"},
+    {name = "Azul",    id = "18637076370", code = "033FireBlue"},
+    {name = "Roxo",    id = "18637070174", code = "034FirePurple"},
+    {name = "Preto",   id = "18637072603", code = "035FireBlack"},
+})
+
+--==================================================
+-- CORAÇÕES
+--==================================================
+CreateEffectDropdown("Corações", {
+    {name = "Amarelo", id = "18635672195", code = "001HeartsYellow"},
+    {name = "Verde",   id = "18635727693", code = "002HeartsGreen"},
+    {name = "Azul",    id = "18635732186", code = "003HeartsBlue"},
+    {name = "Roxo",    id = "18635723426", code = "004HeartsPurple"},
+    {name = "Rosa",    id = "18635726250", code = "005HeartsPink"},
+    {name = "Vermelho",id = "18635729673", code = "006HeartsRed"},
+})
+
+--==================================================
+-- ESTRELA
+--==================================================
+CreateEffectDropdown("Estrela", {
+    {name = "Branca",  id = "18637942956", code = "090StarWhite"},
+    {name = "Laranja", id = "18637946172", code = "091StarOrange"},
+    {name = "Verde",   id = "18637934500", code = "092StarGreen"},
+    {name = "Azul",    id = "18637940338", code = "093StarBlue"},
+    {name = "Roxa",    id = "18637944796", code = "094StarPurple"},
+    {name = "Rosa",    id = "18637947820", code = "095StarPink"},
+    {name = "Vermelha",id = "18637949457", code = "096StarRed"},
+})
+
+--==================================================
+-- FUMAÇA
+--==================================================
+CreateEffectDropdown("Fumaça", {
+    {name = "Branca",  id = "18637791748", code = "080SmokeWhite"},
+    {name = "Amarela", id = "18637800482", code = "081SmokeYellow"},
+    {name = "Laranja", id = "18637793920", code = "082SmokeOrange"},
+    {name = "Verde",   id = "18637789299", code = "083SmokeGreen"},
+    {name = "Azul",    id = "18637803021", code = "084SmokeBlue"},
+    {name = "Roxa",    id = "18637813360", code = "085SmokePurple"},
+    {name = "Vermelha",id = "18637796598", code = "086SmokeRed"},
+    {name = "Preta",   id = "18637798529", code = "087SmokeBlack"},
+})
+
+SkinsTab:AddSection({ "Corpos" })
+
+--==================================================
+-- FUNÇÃO BASE
+--==================================================
+local function ApplyBody(ids)
+    Remotes.ChangeCharacterBody:InvokeServer({
+        ids[1],
+        ids[2],
+        ids[3],
+        ids[4],
+        ids[5],
+        ids[6]
+    })
+end
+
+--==================================================
+-- LISTA ORGANIZADA DE CORPOS
+--==================================================
+local Bodies = {
+    ["Padrão"] = {  
+        { name = "Pequeno", ids = {376532000,376531012,376530220,0,0,71993263971199} },  
+        { name = "Musculoso", ids = {32336059,4416788553,4416785861,2517207746,2517204456,0} },  
+        { name = "Auto", ids = {84053421838284,116266039925754,115931454049085,96815508293389,121515016872144,76568859580605} },  
+        { name = "Mini", ids = {120973199097564,112849465115864,118345433416023,0,0,134082579} },  
+        { name = "1x1x1x", ids = {87108996849145,89124612345294,84431523780379,104281326156987,94645302037763,0} },  
+        { name = "Auto 2", ids = {15365110905,17754346380,17754346403,139607718,81153927159685,102360893332889} },  
+        { name = "Musculoso 2", ids = {18178775358,18178775182,18178775725,96815508293389,121515016872144,0} },  
+        { name = "Musculoso 3", ids = {32336117,16580491126,32336182,14752574049,14752574419,16580493236} },  
+        { name = "Mini REPO", ids = {117101023704825,125767940563838,137301494386930,87357384184710,133391239416999,111818794467824} },  
+        { name = "Mini Garanhão", ids = {124355047456535,120507500641962,82273782655463,113625313757230,109182039511426,0} },  
+        { name = "Stick", ids = {14731384498,14731377938,14731377894,14731377875,14731377941,14731382899} },  
+        { name = "Chunky-Bug", ids = {15527827600,15527827578,15527831669,15527836067,15527827184,15527827599} },  
+        { name = "Cursed-Spider", ids = {134555168634906,100269043793774,125607053187319,122504853343598,95907982259204,91289185840375} },  
+        { name = "Pessed Terror", ids = {122800511983371,132465361516275,125155800236527,83070163355072,102906187256945,78311422507297} },  
+    },  
+
+    ["Feminino"] = {  
+        { name = "Bunda Caída", ids = {75159926897589,76683091425509,14567282030,14567281990,14874108946,0} },  
+        { name = "Pequena Coxuda", ids = {84519338962111,104625992479605,89231963593670,101500262169377,130044271500910,0} },  
+        { name = "Pequena Cheinha", ids = {17759625390,17759625333,17759625415,17759626537,130044271500910,0} },  
+        { name = "Sla Moça", ids = {97119075795691,72699005696177,122027795919157,80393546275035,125637672664513,0} },  
+    }
+}
+
+--==================================================
+-- CRIAR DROPDOWN AUTOMÁTICO
+--==================================================
+local function CreateBodyDropdown(categoryName, bodyTable)
+    local options = {}  
+    for _, body in ipairs(bodyTable) do  
+        table.insert(options, body.name)  
+    end  
+
+    SkinsTab:AddDropdown({  
+        Name = categoryName,  
+        Options = options,  
+        Callback = function(selected)  
+            for _, body in ipairs(bodyTable) do  
+                if body.name == selected then  
+                    ApplyBody(body.ids)  
+                    break  
+                end  
+            end  
+        end  
+    })
+end
+
+--==================================================
+-- GERAR TODOS AUTOMATICAMENTE
+--==================================================
+for categoryName, bodyTable in pairs(Bodies) do
+    CreateBodyDropdown(categoryName, bodyTable)
+end
+
+SkinsTab:AddSection({ "Itens / Skins" })
+
+--==================================================
+-- LISTA ORGANIZADA DE ITENS
+--==================================================
+local Itens = {
+    ["Cabelos"] = {  
+        { nome = "Cabelo Herói Energético", id = 18724905873 },  
+        { nome = "Moicano Flamejante", id = 191101707 },  
+        { nome = "Cabelo Anime Flamejante", id = 119481693055025 },  
+    },  
+
+    ["Máscaras e Cabeças"] = {  
+        { nome = "Máscara Besouro", id = 18536708029 },  
+        { nome = "Máscara Múmia Antiga", id = 10488323544 },  
+        { nome = "Cabeça Abóbora Sombria", id = 14847637885 },  
+        { nome = "Cabeça Marshmallow", id = 9862651601 },  
+        { nome = "Cabeça Medusa Pedra", id = 14291849064 },  
+        { nome = "Sem Cabeça", id = 134082579 },  
+    },  
+
+    ["Asas"] = {  
+        { nome = "Asas Lava Molen", id = 17266515535 },  
+        { nome = "Asas Douradas Brilhantes", id = 417456127 },  
+        { nome = "Asa de Anjo", id = 192557913 },  
+    },  
+
+    ["Armas e Cajados"] = {  
+        { nome = "Espada Lava Molen", id = 17266499353 },  
+        { nome = "Cajado Robux Real", id = 17213230300 },  
+        { nome = "Cetro Dourado do Amor", id = 18431439532 },  
+        { nome = "Bobux Blaster", id = 13352926142 },  
+    },  
+
+    ["Auras e Efeitos"] = {  
+        { nome = "Aura Sombria", id = 76292007466829 },  
+        { nome = "Aura Mística", id = 125290933021110 },  
+    },  
+
+    ["Diversos"] = {  
+        { nome = "Guarda-Chuva Chuvoso", id = 16972760311 },  
+        { nome = "Chapéu Clássico", id = 305888394 },  
+        { nome = "Pé Gigante 1", id = 140311311736304 },  
+        { nome = "Pé Gigante 2", id = 94880807456770 },  
+        { nome = "Unhas Grandes", id = 135726095366567 },  
+        { nome = "Mãos Grandes", id = 12725518393 },  
+    }
+}
+
+--==================================================
+-- FUNÇÃO PARA CRIAR DROPDOWN AUTOMÁTICO
+--==================================================
+local function CriarDropdownItem(nomeCategoria, tabelaItens)
+    local opcoes = {}  
+    for _, item in ipairs(tabelaItens) do  
+        table.insert(opcoes, item.nome)  
+    end  
+
+    SkinsTab:AddDropdown({  
+        Name = nomeCategoria,  
+        Options = opcoes,  
+        Callback = function(selecionado)  
+            for _, item in ipairs(tabelaItens) do  
+                if item.nome == selecionado then  
+                    pcall(function()  
+                        Remotes.Wear:InvokeServer(item.id)  
+                    end)  
+                    break  
+                end  
+            end  
+        end  
+    })
+end
+
+--==================================================
+-- GERAR TODOS AUTOMATICAMENTE
+--==================================================
+for categoria, tabelaItens in pairs(Itens) do
+    CriarDropdownItem(categoria, tabelaItens)
+end
+
+
+
+
 --////////////////////////////////////////////////////
 --// ABA ITENS 🎁
 local ItemTab = Window:MakeTab({
