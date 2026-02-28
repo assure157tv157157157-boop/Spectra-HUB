@@ -396,6 +396,143 @@ game:GetService("UserInputService").JumpRequest:Connect(function()
     end
 end)
 
+
+local UltimateNoclip = {
+    Enabled = false,
+    Connections = {},
+    SoccerBalls = {}
+}
+
+--// SERVICES
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local Workspace = game:GetService("Workspace")
+
+local LocalPlayer = Players.LocalPlayer
+
+--// FUNÇÃO: Aplicar colisão no personagem
+local function applyCharacterCollision(state)
+    local character = LocalPlayer.Character
+    if not character then return end
+
+    for _, obj in ipairs(character:GetDescendants()) do
+        if obj:IsA("BasePart") then
+            obj.CanCollide = state
+        end
+    end
+end
+
+--// FUNÇÃO: Anti Void
+local function voidProtection()
+    local character = LocalPlayer.Character
+    if not character then return end
+
+    local root = character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+
+    if root.Position.Y < -500 then
+        root.CFrame = CFrame.new(0, 100, 0)
+        root.AssemblyLinearVelocity = Vector3.zero
+    end
+end
+
+--// FUNÇÃO: Controlar bolas
+local function updateSoccerBalls()
+    local soccerFolder = Workspace:FindFirstChild("Com", true)
+    if not soccerFolder then return end
+
+    soccerFolder = soccerFolder:FindFirstChild("001_SoccerBalls")
+    if not soccerFolder then return end
+
+    for _, ball in ipairs(soccerFolder:GetChildren()) do
+        if ball:IsA("BasePart") and ball.Name:match("^Soccer") then
+            UltimateNoclip.SoccerBalls[ball] = true
+
+            ball.CanCollide = not UltimateNoclip.Enabled
+            ball.Anchored = UltimateNoclip.Enabled
+        end
+    end
+end
+
+--// LOOP PRINCIPAL
+local function startSystem()
+
+    if UltimateNoclip.Connections.Heartbeat then return end
+
+    UltimateNoclip.Connections.Heartbeat =
+        RunService.Heartbeat:Connect(function()
+
+            if not UltimateNoclip.Enabled then return end
+
+            applyCharacterCollision(false)
+            voidProtection()
+
+        end)
+
+    -- Atualiza bolas a cada 2 segundos (sem usar tick %)
+    UltimateNoclip.Connections.BallLoop =
+        task.spawn(function()
+            while UltimateNoclip.Enabled do
+                updateSoccerBalls()
+                task.wait(2)
+            end
+        end)
+
+    -- Respawn
+    UltimateNoclip.Connections.CharAdded =
+        LocalPlayer.CharacterAdded:Connect(function()
+            task.wait(0.5)
+            if UltimateNoclip.Enabled then
+                applyCharacterCollision(false)
+            end
+        end)
+end
+
+--// PARAR SISTEMA
+local function stopSystem()
+
+    -- Restaurar colisão jogador
+    applyCharacterCollision(true)
+
+    -- Restaurar bolas
+    for ball in pairs(UltimateNoclip.SoccerBalls) do
+        if ball and ball.Parent then
+            ball.CanCollide = true
+            ball.Anchored = false
+        end
+    end
+
+    -- Desconectar tudo
+    for _, conn in pairs(UltimateNoclip.Connections) do
+        if typeof(conn) == "RBXScriptConnection" then
+            conn:Disconnect()
+        end
+    end
+
+    UltimateNoclip.Connections = {}
+end
+
+--// TOGGLE
+local NoclipToggle = PlayerTab:AddToggle({
+    Name = "Ultimate Noclip",
+    Description = "Noclip + Controle de bolas integrado",
+    Default = false
+})
+
+NoclipToggle:Callback(function(state)
+
+    UltimateNoclip.Enabled = state
+
+    if state then
+        startSystem()
+        updateSoccerBalls()
+    else
+        stopSystem()
+    end
+
+end)
+
+
 --////////////////////////////////////////////////////
 --// ANTI-SIT
 PlayerTab:AddSection({ "Anti-Sit" })
@@ -457,6 +594,29 @@ PlayerTab:AddToggle({
         end
     end
 })
+
+
+
+PlayerTab:AddButton({
+    Name = "Fire Hand",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local initialPosition = character.HumanoidRootPart.Position
+
+        local destination = Vector3.new(-347.7337646484375, 2.397120475769043, 98.97232818603516)
+        character.HumanoidRootPart.CFrame = CFrame.new(destination)
+
+        wait(1)
+
+        fireclickdetector(Workspace.WorkspaceCom["001_Hospital"].PoolClick.ClickDetector)
+
+        wait(1)
+
+        character.HumanoidRootPart.CFrame = CFrame.new(initialPosition)
+    end
+})
+
 
 
 PlayerTab:AddSection({ "ESP" })
