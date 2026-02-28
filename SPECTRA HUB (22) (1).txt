@@ -351,60 +351,6 @@ PlayerTab:AddToggle({
     end
 })
 
-game:GetService("UserInputService").JumpRequest:Connect(function()
-    if InfiniteJumpEnabled and humanoid then
-        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-    end
-end)
-
-game:GetService("UserInputService").JumpRequest:Connect(function()
-    if InfiniteJumpEnabled and humanoid then
-        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-    end
-end)
-
-
-
-local RunService = game:GetService("RunService")
-local player = game.Players.LocalPlayer
-local connection
-local running = false
-
-local function ativarNoclip()
-    if running then return end
-    running = true
-    connection = RunService.Stepped:Connect(function()
-        if not running then return end
-        for _, v in pairs(player.Character:GetDescendants()) do
-            if v:IsA("BasePart") then
-                v.CanCollide = false
-            end
-        end
-    end)
-end
-
-local function desativarENukarScript()
-    running = false
-    if connection then
-        connection:Disconnect()
-        connection = nil
-    end
-
-    task.delay(0.1, function()
-        script:Destroy()
-    end)
-end
-
-PlayerTab:AddToggle({
-    Name = "atravessar paredes",
-    Callback = function(value)
-        if value then
-            ativarNoclip()
-        else
-            desativarENukarScript()
-        end
-    end
-})
 
 
 
