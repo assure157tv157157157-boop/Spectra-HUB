@@ -338,39 +338,6 @@ PlayerTab:AddButton({
 
 
 
---// SPIN
-PlayerTab:AddSection({ "Spin" })
-local spinning, spinSpeed = false, 50
-
-PlayerTab:AddToggle({
-    Name = "Spin On/Off",
-    Default = false,
-    Callback = function(v) spinning = v end
-})
-
-PlayerTab:AddSlider({
-    Name = "Spin Speed",
-    Min = 1,
-    Max = 1000,
-    Default = spinSpeed,
-    Callback = function(v) spinSpeed = v end
-})
-
-RunService.RenderStepped:Connect(function(dt)
-    if spinning and humanoid and humanoid.RootPart then
-        humanoid.RootPart.CFrame *= CFrame.Angles(0, math.rad(spinSpeed * dt), 0)
-    end
-end)
-
-RunService.Stepped:Connect(function()
-    if NoclipEnabled and plr.Character then
-        for _, part in ipairs(plr.Character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = false
-            end
-        end
-    end
-end)
 
 
 --// INFINITE JUMP
@@ -524,6 +491,115 @@ PlayerTab:AddButton({
         character.HumanoidRootPart.CFrame = CFrame.new(initialPosition)
     end
 })
+
+
+
+--// ===============================
+--// SPIN SYSTEM V2 - OTIMIZADO
+--// ===============================
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+
+local plr = Players.LocalPlayer
+local character = plr.Character or plr.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+local spinning = false
+local spinSpeed = 200
+local reverseSpin = false
+local spinMode = "Body" -- Body / Head / Crazy
+local turboMode = false
+
+-- Atualiza character se morrer
+plr.CharacterAdded:Connect(function(char)
+    character = char
+    humanoid = char:WaitForChild("Humanoid")
+end)
+
+--// UI
+
+PlayerTab:AddSection({ "Spin System " })
+
+PlayerTab:AddToggle({
+    Name = "Spin",
+    Default = false,
+    Callback = function(v)
+        spinning = v
+    end
+})
+
+PlayerTab:AddToggle({
+    Name = "Reverse Spin",
+    Default = false,
+    Callback = function(v)
+        reverseSpin = v
+    end
+})
+
+PlayerTab:AddToggle({
+    Name = "Turbo Spin",
+    Default = false,
+    Callback = function(v)
+        turboMode = v
+    end
+})
+
+PlayerTab:AddDropdown({
+    Name = "Spin Mode",
+    Options = { "Body", "Head", "Crazy" },
+    Default = "Body",
+    Callback = function(v)
+        spinMode = v
+    end
+})
+
+PlayerTab:AddSlider({
+    Name = "Spin Speed",
+    Min = 1,
+    Max = 5000,
+    Default = spinSpeed,
+    Callback = function(v)
+        spinSpeed = v
+    end
+})
+
+--// LOOP PRINCIPAL OTIMIZADO
+
+RunService.RenderStepped:Connect(function(dt)
+    if not spinning then return end
+    if not character then return end
+    
+    local root = character:FindFirstChild("HumanoidRootPart")
+    local head = character:FindFirstChild("Head")
+    
+    local speed = spinSpeed
+    
+    if turboMode then
+        speed = speed * 3
+    end
+    
+    if reverseSpin then
+        speed = -speed
+    end
+    
+    local angle = math.rad(speed * dt)
+
+    if spinMode == "Body" and root then
+        root.CFrame *= CFrame.Angles(0, angle, 0)
+
+    elseif spinMode == "Head" and head then
+        head.CFrame *= CFrame.Angles(0, angle, 0)
+
+    elseif spinMode == "Crazy" and root then
+        root.CFrame *= CFrame.Angles(
+            math.rad(math.random(-speed, speed) * dt),
+            math.rad(math.random(-speed, speed) * dt),
+            math.rad(math.random(-speed, speed) * dt)
+        )
+    end
+end)
+
 
 
 
