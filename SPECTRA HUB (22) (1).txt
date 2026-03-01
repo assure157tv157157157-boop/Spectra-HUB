@@ -41,6 +41,460 @@
 
 
 
+
+
+
+
+
+                         .@%(/*,.......      ...,,*/(#%&@@..
+                     (*   ,/(#%%&&@@@@&%((////(((##%###((/**,,. .  .  ,//(&.
+                   /* .%@@@@@@@@%,  .(&@@@&&&&&&@@@@@@&#(*,........*%@@@(.  ,#.
+                 */ .&@@@@@@@*  (%,   *(&&@@@@@&%(*,.             .,*(#%(*@@&*  *,
+                #, /@@@@@@* *&( ,&&/.,/#%&&@@@&(&@@@@@@@@@@@@#*,.....,/&@@@@@@@@( .%
+               #  #@@@@@*/@% .#%./(,.,/*,//*,.,/(*@@@@@@@@@@@@%@@@@@@@@@#.#@@@@@@&. %
+              /  &@@@@@@@@(%@# *&&*&@@@@#/&@@@@/%%.,%@@@@@@@%/@@&(,  ,,,...  *%@@@# *
+            #  .&@@@@@@@@@@@,((%@@@@@#.    ,&@@#@@&* .&@@@@@&,.#@@@@/&@@%(@@@&(/,(&, /,
+         (/   (@&&&%&@@@&/, ,@#(@@@@,   ⭕    #@@/,&@& /@@@@@,%#%@@@@@(  ⭕  *@@@@@&,%%. .
+        /  #/,#@@@&#(//#@@@/ %@@@&@@@(.    ,&@@(.*/*  %@@*   %@@@@@@%       (@@&(*...%&.
+         ///@@&,  (&@@#,   /@/ ,*&@@@@#&@@%#%((%@&* /@@@@@@&. #@@@#&@@@&%%@@@@@@&,/(*@/#
+        %%.&@# .&@@@# /@@@@%&@@@&/.   ,/((/*,  ./&@@@@@@@@@@,*&(./%@@#*&@@@(#(....,&#*@/
+        @%.&& .&@@@&*    /&@@@@@@@@@@@@@@@@&@@#/(%@@@@@@@@@@&,  (@@@@@@@@@@@@/,@@@@@#.&*
+        &&,%% .&*    /@@@(.  ,(@@@@@&/(////#( /&@@@@@@@@@@@@@@@(  ,&@@@@@@@@&, (@@&*/@(/
+        .%*#@( /@@@@( *@@@@@@/     *%@@@@@@@&.,@& ,#, .&@@@@@@# .#*%&/,#@@@@*   *@@&/*&*
+         .&/.#@@@@@@@,   *&@@%.,&@@&(,    ,(%@%&@@@@@@@@@(.*,  /@@@@@@@@@&,      %@@@@..
+        @* .%@@@@@@@@(       .   (@@@@@@@@(       .*(%&@@@@@@@@@@@@&(,  ./.*@%   /@@% ./
+          @* .&@@@@@@&.             ./&@@@*.&@@@@@@@&, ,**,.    .,*(&(.%@@# %@*  ,@@% ,#
+            &, /@@@@@@*                    .#@@@@@@@@*.%@@@@@(,@@@@@@& ,%(.      .&@% ,#
+              / *@@@@@#  se fudeu fodido nem tua família   gosta de tu           %@&.,#
+              (( .&@@@@*                                                          #@&.,#
+               .&. ,&@@@,                                                         (@&.,#
+                  #. .%@@* /@@/                                                   /@&.,(
+                    ./  #@%. %@&,,#,                                              /@@,./
+                      *(  #@%. . (@@@@@%/,                                        /@@,.*
+                        //  %@&, *@@@@@@@@( (@%/.                                 #@@, (
+                          #* .&@@#. (@@@@&.*@@@@@@@@%. */.                  *..%*.&@@, /
+                            @* .%@@@%, ,/ .@@@@@@@@@@,.%@@@@@% .&@@@* #@&..&@*,* %@@&. *
+                               /  *&@@@@%,   *(&@@@@&. #@@@@@* #@@@% (@@* ,.   /@@@@* (
+                                 @#. .#@@@@@@&(,.                      .,*(%&@@@@@&..(
+                                     &(.   ./%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@(. ((
+                                          ,#/*.       ..,,,,,,,,....          ,/#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         .@%(/*,.......      ...,,*/(#%&@@..
+                     (*   ,/(#%%&&@@@@&%((////(((##%###((/**,,. .  .  ,//(&.
+                   /* .%@@@@@@@@%,  .(&@@@&&&&&&@@@@@@&#(*,........*%@@@(.  ,#.
+                 */ .&@@@@@@@*  (%,   *(&&@@@@@&%(*,.             .,*(#%(*@@&*  *,
+                #, /@@@@@@* *&( ,&&/.,/#%&&@@@&(&@@@@@@@@@@@@#*,.....,/&@@@@@@@@( .%
+               #  #@@@@@*/@% .#%./(,.,/*,//*,.,/(*@@@@@@@@@@@@%@@@@@@@@@#.#@@@@@@&. %
+              /  &@@@@@@@@(%@# *&&*&@@@@#/&@@@@/%%.,%@@@@@@@%/@@&(,  ,,,...  *%@@@# *
+            #  .&@@@@@@@@@@@,((%@@@@@#.    ,&@@#@@&* .&@@@@@&,.#@@@@/&@@%(@@@&(/,(&, /,
+         (/   (@&&&%&@@@&/, ,@#(@@@@,   ⭕    #@@/,&@& /@@@@@,%#%@@@@@(  ⭕  *@@@@@&,%%. .
+        /  #/,#@@@&#(//#@@@/ %@@@&@@@(.    ,&@@(.*/*  %@@*   %@@@@@@%       (@@&(*...%&.
+         ///@@&,  (&@@#,   /@/ ,*&@@@@#&@@%#%((%@&* /@@@@@@&. #@@@#&@@@&%%@@@@@@&,/(*@/#
+        %%.&@# .&@@@# /@@@@%&@@@&/.   ,/((/*,  ./&@@@@@@@@@@,*&(./%@@#*&@@@(#(....,&#*@/
+        @%.&& .&@@@&*    /&@@@@@@@@@@@@@@@@&@@#/(%@@@@@@@@@@&,  (@@@@@@@@@@@@/,@@@@@#.&*
+        &&,%% .&*    /@@@(.  ,(@@@@@&/(////#( /&@@@@@@@@@@@@@@@(  ,&@@@@@@@@&, (@@&*/@(/
+        .%*#@( /@@@@( *@@@@@@/     *%@@@@@@@&.,@& ,#, .&@@@@@@# .#*%&/,#@@@@*   *@@&/*&*
+         .&/.#@@@@@@@,   *&@@%.,&@@&(,    ,(%@%&@@@@@@@@@(.*,  /@@@@@@@@@&,      %@@@@..
+        @* .%@@@@@@@@(       .   (@@@@@@@@(       .*(%&@@@@@@@@@@@@&(,  ./.*@%   /@@% ./
+          @* .&@@@@@@&.             ./&@@@*.&@@@@@@@&, ,**,.    .,*(&(.%@@# %@*  ,@@% ,#
+            &, /@@@@@@*                    .#@@@@@@@@*.%@@@@@(,@@@@@@& ,%(.      .&@% ,#
+              / *@@@@@#  se fudeu fodido nem tua família   gosta de tu           %@&.,#
+              (( .&@@@@*                                                          #@&.,#
+               .&. ,&@@@,                                                         (@&.,#
+                  #. .%@@* /@@/                                                   /@&.,(
+                    ./  #@%. %@&,,#,                                              /@@,./
+                      *(  #@%. . (@@@@@%/,                                        /@@,.*
+                        //  %@&, *@@@@@@@@( (@%/.                                 #@@, (
+                          #* .&@@#. (@@@@&.*@@@@@@@@%. */.                  *..%*.&@@, /
+                            @* .%@@@%, ,/ .@@@@@@@@@@,.%@@@@@% .&@@@* #@&..&@*,* %@@&. *
+                               /  *&@@@@%,   *(&@@@@&. #@@@@@* #@@@% (@@* ,.   /@@@@* (
+                                 @#. .#@@@@@@&(,.                      .,*(%&@@@@@&..(
+                                     &(.   ./%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@(. ((
+                                          ,#/*.       ..,,,,,,,,....          ,/#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         .@%(/*,.......      ...,,*/(#%&@@..
+                     (*   ,/(#%%&&@@@@&%((////(((##%###((/**,,. .  .  ,//(&.
+                   /* .%@@@@@@@@%,  .(&@@@&&&&&&@@@@@@&#(*,........*%@@@(.  ,#.
+                 */ .&@@@@@@@*  (%,   *(&&@@@@@&%(*,.             .,*(#%(*@@&*  *,
+                #, /@@@@@@* *&( ,&&/.,/#%&&@@@&(&@@@@@@@@@@@@#*,.....,/&@@@@@@@@( .%
+               #  #@@@@@*/@% .#%./(,.,/*,//*,.,/(*@@@@@@@@@@@@%@@@@@@@@@#.#@@@@@@&. %
+              /  &@@@@@@@@(%@# *&&*&@@@@#/&@@@@/%%.,%@@@@@@@%/@@&(,  ,,,...  *%@@@# *
+            #  .&@@@@@@@@@@@,((%@@@@@#.    ,&@@#@@&* .&@@@@@&,.#@@@@/&@@%(@@@&(/,(&, /,
+         (/   (@&&&%&@@@&/, ,@#(@@@@,   ⭕    #@@/,&@& /@@@@@,%#%@@@@@(  ⭕  *@@@@@&,%%. .
+        /  #/,#@@@&#(//#@@@/ %@@@&@@@(.    ,&@@(.*/*  %@@*   %@@@@@@%       (@@&(*...%&.
+         ///@@&,  (&@@#,   /@/ ,*&@@@@#&@@%#%((%@&* /@@@@@@&. #@@@#&@@@&%%@@@@@@&,/(*@/#
+        %%.&@# .&@@@# /@@@@%&@@@&/.   ,/((/*,  ./&@@@@@@@@@@,*&(./%@@#*&@@@(#(....,&#*@/
+        @%.&& .&@@@&*    /&@@@@@@@@@@@@@@@@&@@#/(%@@@@@@@@@@&,  (@@@@@@@@@@@@/,@@@@@#.&*
+        &&,%% .&*    /@@@(.  ,(@@@@@&/(////#( /&@@@@@@@@@@@@@@@(  ,&@@@@@@@@&, (@@&*/@(/
+        .%*#@( /@@@@( *@@@@@@/     *%@@@@@@@&.,@& ,#, .&@@@@@@# .#*%&/,#@@@@*   *@@&/*&*
+         .&/.#@@@@@@@,   *&@@%.,&@@&(,    ,(%@%&@@@@@@@@@(.*,  /@@@@@@@@@&,      %@@@@..
+        @* .%@@@@@@@@(       .   (@@@@@@@@(       .*(%&@@@@@@@@@@@@&(,  ./.*@%   /@@% ./
+          @* .&@@@@@@&.             ./&@@@*.&@@@@@@@&, ,**,.    .,*(&(.%@@# %@*  ,@@% ,#
+            &, /@@@@@@*                    .#@@@@@@@@*.%@@@@@(,@@@@@@& ,%(.      .&@% ,#
+              / *@@@@@#  se fudeu fodido nem tua família   gosta de tu           %@&.,#
+              (( .&@@@@*                                                          #@&.,#
+               .&. ,&@@@,                                                         (@&.,#
+                  #. .%@@* /@@/                                                   /@&.,(
+                    ./  #@%. %@&,,#,                                              /@@,./
+                      *(  #@%. . (@@@@@%/,                                        /@@,.*
+                        //  %@&, *@@@@@@@@( (@%/.                                 #@@, (
+                          #* .&@@#. (@@@@&.*@@@@@@@@%. */.                  *..%*.&@@, /
+                            @* .%@@@%, ,/ .@@@@@@@@@@,.%@@@@@% .&@@@* #@&..&@*,* %@@&. *
+                               /  *&@@@@%,   *(&@@@@&. #@@@@@* #@@@% (@@* ,.   /@@@@* (
+                                 @#. .#@@@@@@&(,.                      .,*(%&@@@@@&..(
+                                     &(.   ./%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@(. ((
+                                          ,#/*.       ..,,,,,,,,....          ,/#
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         .@%(/*,.......      ...,,*/(#%&@@..
+                     (*   ,/(#%%&&@@@@&%((////(((##%###((/**,,. .  .  ,//(&.
+                   /* .%@@@@@@@@%,  .(&@@@&&&&&&@@@@@@&#(*,........*%@@@(.  ,#.
+                 */ .&@@@@@@@*  (%,   *(&&@@@@@&%(*,.             .,*(#%(*@@&*  *,
+                #, /@@@@@@* *&( ,&&/.,/#%&&@@@&(&@@@@@@@@@@@@#*,.....,/&@@@@@@@@( .%
+               #  #@@@@@*/@% .#%./(,.,/*,//*,.,/(*@@@@@@@@@@@@%@@@@@@@@@#.#@@@@@@&. %
+              /  &@@@@@@@@(%@# *&&*&@@@@#/&@@@@/%%.,%@@@@@@@%/@@&(,  ,,,...  *%@@@# *
+            #  .&@@@@@@@@@@@,((%@@@@@#.    ,&@@#@@&* .&@@@@@&,.#@@@@/&@@%(@@@&(/,(&, /,
+         (/   (@&&&%&@@@&/, ,@#(@@@@,   ⭕    #@@/,&@& /@@@@@,%#%@@@@@(  ⭕  *@@@@@&,%%. .
+        /  #/,#@@@&#(//#@@@/ %@@@&@@@(.    ,&@@(.*/*  %@@*   %@@@@@@%       (@@&(*...%&.
+         ///@@&,  (&@@#,   /@/ ,*&@@@@#&@@%#%((%@&* /@@@@@@&. #@@@#&@@@&%%@@@@@@&,/(*@/#
+        %%.&@# .&@@@# /@@@@%&@@@&/.   ,/((/*,  ./&@@@@@@@@@@,*&(./%@@#*&@@@(#(....,&#*@/
+        @%.&& .&@@@&*    /&@@@@@@@@@@@@@@@@&@@#/(%@@@@@@@@@@&,  (@@@@@@@@@@@@/,@@@@@#.&*
+        &&,%% .&*    /@@@(.  ,(@@@@@&/(////#( /&@@@@@@@@@@@@@@@(  ,&@@@@@@@@&, (@@&*/@(/
+        .%*#@( /@@@@( *@@@@@@/     *%@@@@@@@&.,@& ,#, .&@@@@@@# .#*%&/,#@@@@*   *@@&/*&*
+         .&/.#@@@@@@@,   *&@@%.,&@@&(,    ,(%@%&@@@@@@@@@(.*,  /@@@@@@@@@&,      %@@@@..
+        @* .%@@@@@@@@(       .   (@@@@@@@@(       .*(%&@@@@@@@@@@@@&(,  ./.*@%   /@@% ./
+          @* .&@@@@@@&.             ./&@@@*.&@@@@@@@&, ,**,.    .,*(&(.%@@# %@*  ,@@% ,#
+            &, /@@@@@@*                    .#@@@@@@@@*.%@@@@@(,@@@@@@& ,%(.      .&@% ,#
+              / *@@@@@#  se fudeu fodido nem tua família   gosta de tu           %@&.,#
+              (( .&@@@@*                                                          #@&.,#
+               .&. ,&@@@,                                                         (@&.,#
+                  #. .%@@* /@@/                                                   /@&.,(
+                    ./  #@%. %@&,,#,                                              /@@,./
+                      *(  #@%. . (@@@@@%/,                                        /@@,.*
+                        //  %@&, *@@@@@@@@( (@%/.                                 #@@, (
+                          #* .&@@#. (@@@@&.*@@@@@@@@%. */.                  *..%*.&@@, /
+                            @* .%@@@%, ,/ .@@@@@@@@@@,.%@@@@@% .&@@@* #@&..&@*,* %@@&. *
+                               /  *&@@@@%,   *(&@@@@&. #@@@@@* #@@@% (@@* ,.   /@@@@* (
+                                 @#. .#@@@@@@&(,.                      .,*(%&@@@@@&..(
+                                     &(.   ./%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@(. ((
+                                          ,#/*.       ..,,,,,,,,....          ,/#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                         .@%(/*,.......      ...,,*/(#%&@@..
+                     (*   ,/(#%%&&@@@@&%((////(((##%###((/**,,. .  .  ,//(&.
+                   /* .%@@@@@@@@%,  .(&@@@&&&&&&@@@@@@&#(*,........*%@@@(.  ,#.
+                 */ .&@@@@@@@*  (%,   *(&&@@@@@&%(*,.             .,*(#%(*@@&*  *,
+                #, /@@@@@@* *&( ,&&/.,/#%&&@@@&(&@@@@@@@@@@@@#*,.....,/&@@@@@@@@( .%
+               #  #@@@@@*/@% .#%./(,.,/*,//*,.,/(*@@@@@@@@@@@@%@@@@@@@@@#.#@@@@@@&. %
+              /  &@@@@@@@@(%@# *&&*&@@@@#/&@@@@/%%.,%@@@@@@@%/@@&(,  ,,,...  *%@@@# *
+            #  .&@@@@@@@@@@@,((%@@@@@#.    ,&@@#@@&* .&@@@@@&,.#@@@@/&@@%(@@@&(/,(&, /,
+         (/   (@&&&%&@@@&/, ,@#(@@@@,   ⭕    #@@/,&@& /@@@@@,%#%@@@@@(  ⭕  *@@@@@&,%%. .
+        /  #/,#@@@&#(//#@@@/ %@@@&@@@(.    ,&@@(.*/*  %@@*   %@@@@@@%       (@@&(*...%&.
+         ///@@&,  (&@@#,   /@/ ,*&@@@@#&@@%#%((%@&* /@@@@@@&. #@@@#&@@@&%%@@@@@@&,/(*@/#
+        %%.&@# .&@@@# /@@@@%&@@@&/.   ,/((/*,  ./&@@@@@@@@@@,*&(./%@@#*&@@@(#(....,&#*@/
+        @%.&& .&@@@&*    /&@@@@@@@@@@@@@@@@&@@#/(%@@@@@@@@@@&,  (@@@@@@@@@@@@/,@@@@@#.&*
+        &&,%% .&*    /@@@(.  ,(@@@@@&/(////#( /&@@@@@@@@@@@@@@@(  ,&@@@@@@@@&, (@@&*/@(/
+        .%*#@( /@@@@( *@@@@@@/     *%@@@@@@@&.,@& ,#, .&@@@@@@# .#*%&/,#@@@@*   *@@&/*&*
+         .&/.#@@@@@@@,   *&@@%.,&@@&(,    ,(%@%&@@@@@@@@@(.*,  /@@@@@@@@@&,      %@@@@..
+        @* .%@@@@@@@@(       .   (@@@@@@@@(       .*(%&@@@@@@@@@@@@&(,  ./.*@%   /@@% ./
+          @* .&@@@@@@&.             ./&@@@*.&@@@@@@@&, ,**,.    .,*(&(.%@@# %@*  ,@@% ,#
+            &, /@@@@@@*                    .#@@@@@@@@*.%@@@@@(,@@@@@@& ,%(.      .&@% ,#
+              / *@@@@@#  se fudeu fodido nem tua família   gosta de tu           %@&.,#
+              (( .&@@@@*                                                          #@&.,#
+               .&. ,&@@@,                                                         (@&.,#
+                  #. .%@@* /@@/                                                   /@&.,(
+                    ./  #@%. %@&,,#,                                              /@@,./
+                      *(  #@%. . (@@@@@%/,                                        /@@,.*
+                        //  %@&, *@@@@@@@@( (@%/.                                 #@@, (
+                          #* .&@@#. (@@@@&.*@@@@@@@@%. */.                  *..%*.&@@, /
+                            @* .%@@@%, ,/ .@@@@@@@@@@,.%@@@@@% .&@@@* #@&..&@*,* %@@&. *
+                               /  *&@@@@%,   *(&@@@@&. #@@@@@* #@@@% (@@* ,.   /@@@@* (
+                                 @#. .#@@@@@@&(,.                      .,*(%&@@@@@&..(
+                                     &(.   ./%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@(. ((
+                                          ,#/*.       ..,,,,,,,,....          ,/#
+
+
+
+
+
+
+
+
+
+
+
+                         .@%(/*,.......      ...,,*/(#%&@@..
+                     (*   ,/(#%%&&@@@@&%((////(((##%###((/**,,. .  .  ,//(&.
+                   /* .%@@@@@@@@%,  .(&@@@&&&&&&@@@@@@&#(*,........*%@@@(.  ,#.
+                 */ .&@@@@@@@*  (%,   *(&&@@@@@&%(*,.             .,*(#%(*@@&*  *,
+                #, /@@@@@@* *&( ,&&/.,/#%&&@@@&(&@@@@@@@@@@@@#*,.....,/&@@@@@@@@( .%
+               #  #@@@@@*/@% .#%./(,.,/*,//*,.,/(*@@@@@@@@@@@@%@@@@@@@@@#.#@@@@@@&. %
+              /  &@@@@@@@@(%@# *&&*&@@@@#/&@@@@/%%.,%@@@@@@@%/@@&(,  ,,,...  *%@@@# *
+            #  .&@@@@@@@@@@@,((%@@@@@#.    ,&@@#@@&* .&@@@@@&,.#@@@@/&@@%(@@@&(/,(&, /,
+         (/   (@&&&%&@@@&/, ,@#(@@@@,   ⭕    #@@/,&@& /@@@@@,%#%@@@@@(  ⭕  *@@@@@&,%%. .
+        /  #/,#@@@&#(//#@@@/ %@@@&@@@(.    ,&@@(.*/*  %@@*   %@@@@@@%       (@@&(*...%&.
+         ///@@&,  (&@@#,   /@/ ,*&@@@@#&@@%#%((%@&* /@@@@@@&. #@@@#&@@@&%%@@@@@@&,/(*@/#
+        %%.&@# .&@@@# /@@@@%&@@@&/.   ,/((/*,  ./&@@@@@@@@@@,*&(./%@@#*&@@@(#(....,&#*@/
+        @%.&& .&@@@&*    /&@@@@@@@@@@@@@@@@&@@#/(%@@@@@@@@@@&,  (@@@@@@@@@@@@/,@@@@@#.&*
+        &&,%% .&*    /@@@(.  ,(@@@@@&/(////#( /&@@@@@@@@@@@@@@@(  ,&@@@@@@@@&, (@@&*/@(/
+        .%*#@( /@@@@( *@@@@@@/     *%@@@@@@@&.,@& ,#, .&@@@@@@# .#*%&/,#@@@@*   *@@&/*&*
+         .&/.#@@@@@@@,   *&@@%.,&@@&(,    ,(%@%&@@@@@@@@@(.*,  /@@@@@@@@@&,      %@@@@..
+        @* .%@@@@@@@@(       .   (@@@@@@@@(       .*(%&@@@@@@@@@@@@&(,  ./.*@%   /@@% ./
+          @* .&@@@@@@&.             ./&@@@*.&@@@@@@@&, ,**,.    .,*(&(.%@@# %@*  ,@@% ,#
+            &, /@@@@@@*                    .#@@@@@@@@*.%@@@@@(,@@@@@@& ,%(.      .&@% ,#
+              / *@@@@@#  se fudeu fodido nem tua família   gosta de tu           %@&.,#
+              (( .&@@@@*                                                          #@&.,#
+               .&. ,&@@@,                                                         (@&.,#
+                  #. .%@@* /@@/                                                   /@&.,(
+                    ./  #@%. %@&,,#,                                              /@@,./
+                      *(  #@%. . (@@@@@%/,                                        /@@,.*
+                        //  %@&, *@@@@@@@@( (@%/.                                 #@@, (
+                          #* .&@@#. (@@@@&.*@@@@@@@@%. */.                  *..%*.&@@, /
+                            @* .%@@@%, ,/ .@@@@@@@@@@,.%@@@@@% .&@@@* #@&..&@*,* %@@&. *
+                               /  *&@@@@%,   *(&@@@@&. #@@@@@* #@@@% (@@* ,.   /@@@@* (
+                                 @#. .#@@@@@@&(,.                      .,*(%&@@@@@&..(
+                                     &(.   ./%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@(. ((
+                                          ,#/*.       ..,,,,,,,,....          ,/#
+
+
+
+
+
+
+
+https://claude.ai/chat/b6ba2919-c438-4b0f-b8f1-6f5717d16f1f
+
+
+https://arena.ai/pt/c/019c71cb-f336-7af2-ba45-f8dc6bddec1d
+
+
+https://www.xvideos.com
+
+
+
+https://www.google.com/search?q=porno&oq=por&gs_lcrp=EgZjaHJvbWUqB
+ggAEEUYOzIGCAAQRRg7MgYIARBFGDsyBggCEEUYOzIGCAMQRRg5MgcIBBAAGIAEMgYIBRBFGDwyBggGEEUYPDIGCAcQRRg8MgYICBBFGDwyDQgJEAAYsQMYyQMYgAQyDQgKEAAYgwEYsQMYgAQyCggLEAAYsQMYgAQyDQgMEAAYkgMYgAQYigUyBggNEEUYPDIGCA4QRRg80gEIMTYzMmowajeoAhSwAgHxBfVPAL_jScJm&client=ms-android-xiaomi-terr1-rso2&sourceid=chrome-mobile&ie=UTF-8
+
+
+loadst
+ring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
+
+
+
+loadstring(game:HttpGet
+("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%202"))()
+
+
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%203"))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
+
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%202"))()
+
+
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%203"))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
+
+
+
+se fudeu fodido nem tua família   gosta de tu fdp
+
+
+
+
+https://teste-inexistente12345.com/api/dados
+http://exe
+mplo-falso.local/endpoint
+https://meu-dominio-fake.org/login 
+
+http://naoexiste999.net/status
+https://localhost:8080/falso
+
+
+http://api.fa
+keendpoint123/api/v1/usuario
+https:
+//dummyservice001.test/health
+http://invalido.link/teste
+https://naoexisteapi.dev/rota
+http://servidor-fake.local/acao
+
+
+http://se-fudeu-seu.trouxa/vtmnc
+
+
+https://tenor.com/s343jX4Wu5Q.gif
+
+https://www.google.com/search?client=ms-android-xiaomi-terr1-rso2&hs=WWOp&sa=X&sca_esv=9fcb0994feb150f1&sxsrf=ANbL-n6szf7-UVpTyggkVP67L9YuD1jp2g:1771705242869&udm=2&fbs=ADc_l-acAb_3MMOAUx0zmbUpgBqRlDhz5X-HV8KrktiKRKTkK6DcCBZPM8ayzSEkbs9ArVVlwBeHGcDC7yFW6EdCURxhLtV0d8YLZcORLyv54tX7mVydqCOiIUI9ZejlggJD-HIspGivGrrSsN60kixlw1LgJcqxZSIpc2Z_LFUQgLPjWqUtopOeJXwsmMzNgQu0fQmU3QmqPBO8JXChGkCb13fqCIXhq7bCvdBidP09DBScI103gv4&q=porno+gay&ved=2ahUKEwick5ettOuSAxW_uJUCHcEICpoQtKgLegQIDhAB&biw=400&bih=736&dpr=2.7
+
+
+
+https://lovable.dev/auth-bridge?project_id=6b9708b0-e7cb-4213-847c-49de32cfef6a&return_url=https%3A%2F%2Fid-preview--6b9708b0-e7cb-4213-847c-49de32cfef6a.lovable.app%2Floading
+
+
+https://www.google.com/search?q=legging+com+bolso&oq=&gs_lcrp=EgZjaHJvbWUqCQgKECMYJxjqAjIHCAAQRRixATIJCAEQIxgnGOoCMgkIAhAjGCcY6gIyCQgDECMYJxjqAjIJCAQQIxgnGOoCMgkIBRAjGCcY6gIyCQgGECMYJxjqAjIJCAcQIxgnGOoCMgkICBAjGCcY6gIyCQgJECMYJxjqAjIJCAoQIxgnGOoCMgkICxAjGCcY6gIyCQgMECMYJxjqAjIJCA0QIxgnGOoCMgkIDhAjGCcY6gIyEQgPEAAYAxhCGI8BGLQCGOoCMhEIEBAAGAMYQhiPARi0AhjqAjIRCBEQABgDGEIYjwEYtAIY6gIyEQgSEAAYAxhCGI8BGLQCGOoCMg8IExAuGAMYjwEYtAIY6gLSAQYtMWowajeoAhSwAgHxBTzDUgLqBV-18QU8w1IC6gVftQ&client=ms-android-xiaomi-terr1-rso2&sourceid=chrome-mobile&ie=UTF-8
+
+
+https://www.crunchyroll.com/pt-br/news/latest/2026/2/20/anime-filme-that-time-i-got-reincarnated-as-a-slime-the-movie-tears-of-the-azure-sea-trailer-acao
+
+
+https://www.netflix.com/br/
+
+N rouba o spectra seu fdp
+N rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdp
+
+
+https://legadodamarvel.com.br/homem-aranha-4-vazam-as-3-novas-versoes-do-trailer/amp/
+
+
+
+https://claude.ai/chat/b6ba2919-c438-4b0f-b8f1-6f5717d16f1f
+
+
+https://arena.ai/pt/c/019c71cb-f336-7af2-ba45-f8dc6bddec1d
+
+
+https://www.xvideos.com
+
+
+
+https://www.google.com/search?q=porno&oq=por&gs_lcrp=EgZjaHJvbWUqB
+ggAEEUYOzIGCAAQRRg7MgYIARBFGDsyBggCEEUYOzIGCAMQRRg5MgcIBBAAGIAEMgYIBRBFGDwyBggGEEUYPDIGCAcQRRg8MgYICBBFGDwyDQgJEAAYsQMYyQMYgAQyDQgKEAAYgwEYsQMYgAQyCggLEAAYsQMYgAQyDQgMEAAYkgMYgAQYigUyBggNEEUYPDIGCA4QRRg80gEIMTYzMmowajeoAhSwAgHxBfVPAL_jScJm&client=ms-android-xiaomi-terr1-rso2&sourceid=chrome-mobile&ie=UTF-8
+
+
+loadst
+ring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
+
+
+
+loadstring(game:HttpGet
+("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%202"))()
+
+
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%203"))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
+
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%202"))()
+
+
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%203"))()
+
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Nada/refs/heads/main/Nada%201"))()
+
+
+
+se fudeu fodido nem tua família   gosta de tu fdp
+
+
+
+
+https://teste-inexistente12345.com/api/dados
+http://exe
+mplo-falso.local/endpoint
+https://meu-dominio-fake.org/login 
+
+http://naoexiste999.net/status
+https://localhost:8080/falso
+
+
+http://api.fa
+keendpoint123/api/v1/usuario
+https:
+//dummyservice001.test/health
+http://invalido.link/teste
+https://naoexisteapi.dev/rota
+http://servidor-fake.local/acao
+
+
+http://se-fudeu-seu.trouxa/vtmnc
+
+
+https://tenor.com/s343jX4Wu5Q.gif
+
+https://www.google.com/search?client=ms-android-xiaomi-terr1-rso2&hs=WWOp&sa=X&sca_esv=9fcb0994feb150f1&sxsrf=ANbL-n6szf7-UVpTyggkVP67L9YuD1jp2g:1771705242869&udm=2&fbs=ADc_l-acAb_3MMOAUx0zmbUpgBqRlDhz5X-HV8KrktiKRKTkK6DcCBZPM8ayzSEkbs9ArVVlwBeHGcDC7yFW6EdCURxhLtV0d8YLZcORLyv54tX7mVydqCOiIUI9ZejlggJD-HIspGivGrrSsN60kixlw1LgJcqxZSIpc2Z_LFUQgLPjWqUtopOeJXwsmMzNgQu0fQmU3QmqPBO8JXChGkCb13fqCIXhq7bCvdBidP09DBScI103gv4&q=porno+gay&ved=2ahUKEwick5ettOuSAxW_uJUCHcEICpoQtKgLegQIDhAB&biw=400&bih=736&dpr=2.7
+
+
+
+https://lovable.dev/auth-bridge?project_id=6b9708b0-e7cb-4213-847c-49de32cfef6a&return_url=https%3A%2F%2Fid-preview--6b9708b0-e7cb-4213-847c-49de32cfef6a.lovable.app%2Floading
+
+
+https://www.google.com/search?q=legging+com+bolso&oq=&gs_lcrp=EgZjaHJvbWUqCQgKECMYJxjqAjIHCAAQRRixATIJCAEQIxgnGOoCMgkIAhAjGCcY6gIyCQgDECMYJxjqAjIJCAQQIxgnGOoCMgkIBRAjGCcY6gIyCQgGECMYJxjqAjIJCAcQIxgnGOoCMgkICBAjGCcY6gIyCQgJECMYJxjqAjIJCAoQIxgnGOoCMgkICxAjGCcY6gIyCQgMECMYJxjqAjIJCA0QIxgnGOoCMgkIDhAjGCcY6gIyEQgPEAAYAxhCGI8BGLQCGOoCMhEIEBAAGAMYQhiPARi0AhjqAjIRCBEQABgDGEIYjwEYtAIY6gIyEQgSEAAYAxhCGI8BGLQCGOoCMg8IExAuGAMYjwEYtAIY6gLSAQYtMWowajeoAhSwAgHxBTzDUgLqBV-18QU8w1IC6gVftQ&client=ms-android-xiaomi-terr1-rso2&sourceid=chrome-mobile&ie=UTF-8
+
+
+https://www.crunchyroll.com/pt-br/news/latest/2026/2/20/anime-filme-that-time-i-got-reincarnated-as-a-slime-the-movie-tears-of-the-azure-sea-trailer-acao
+
+
+https://www.netflix.com/br/
+
+N rouba o spectra seu fdp
+N rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdpN rouba o spectra seu fdp
+
+
+https://legadodamarvel.com.br/homem-aranha-4-vazam-as-3-novas-versoes-do-trailer/amp/
+
+
+
 https://claude.ai/chat/b6ba2919-c438-4b0f-b8f1-6f5717d16f1f
 
 
