@@ -3531,15 +3531,16 @@ SoundGunTab:AddButton({
     end
 })
 
+
 local RunService = game:GetService("RunService")
 
 LoopSpeed = LoopSpeed or 1
 LoopEnabled = false
 
 --////////////////////////////////////////////////////
---// SLIDER 1 até 350
+--// SLIDER 1 ATÉ 350
 SoundGunTab:AddSlider({
-    Name = "Velocidade do Loop",
+    Name = "⚡ Velocidade do Loop ",
     Min = 1,
     Max = 350,
     Default = LoopSpeed,
@@ -3551,9 +3552,9 @@ SoundGunTab:AddSlider({
 })
 
 --////////////////////////////////////////////////////
---// LOOP INTELIGENTE
+--// LOOP FUNCIONAL REAL
 SoundGunTab:AddToggle({
-    Name = "LOOP SOM",
+    Name = "🔁 LOOP SOM DA LISTA",
     Default = false,
     Callback = function(state)
         LoopEnabled = state
@@ -3562,28 +3563,20 @@ SoundGunTab:AddToggle({
             task.spawn(function()
                 while LoopEnabled do
                     local id = SoundIDs[SelectedName]
-                    if not id then break end
-
-                    local sound = ExecuteSoundGun(id)
-                    if not sound then break end
-
-                    -- Espera o som carregar
-                    if not sound.IsLoaded then
-                        sound.Loaded:Wait()
+                    if id then
+                        ExecuteSoundGun(id)
                     end
 
-                    local duration = sound.TimeLength
+                    -- Delay inteligente
+                    local waitTime
 
-                    -- Cálculo de redução de delay
-                    -- Quanto maior LoopSpeed, menor o tempo de espera
-                    local delayTime = duration / LoopSpeed
-
-                    -- Limite mínimo pra virar spam insano no 350
-                    if LoopSpeed >= 350 then
-                        delayTime = 0.01
+                    if LoopSpeed <= 1 then
+                        waitTime = 2 -- tempo normal (simula som inteiro)
+                    else
+                        waitTime = math.clamp(2 / LoopSpeed, 0.005, 2)
                     end
 
-                    task.wait(delayTime)
+                    task.wait(waitTime)
                 end
             end)
         end
