@@ -3627,12 +3627,19 @@ SoundGunTab:AddButton({
     end
 })
 
+
+
+local RunService = game:GetService("RunService")
+
+LoopSpeed = LoopSpeed or 1
+LoopEnabled = false
+
 --////////////////////////////////////////////////////
---// SLIDER LOOP LISTA
+--// SLIDER LOOP LISTA (1 a 350 REAL)
 SoundGunTab:AddSlider({
-    Name = "⚡ Velocidade do Loop (Lista)",
+    Name = "⚡ Velocidade",
     Min = 1,
-    Max = 50,
+    Max = 350,
     Default = LoopSpeed,
     Increment = 1,
     ValueName = "x",
@@ -3642,26 +3649,36 @@ SoundGunTab:AddSlider({
 })
 
 --////////////////////////////////////////////////////
---// LOOP LISTA
+--// LOOP LISTA OTIMIZADO
 SoundGunTab:AddToggle({
-    Name = "🔁 LOOP SOM DA LISTA",
+    Name = "🔁 LOOP SOM",
     Default = false,
     Callback = function(state)
         LoopEnabled = state
 
         if state then
             task.spawn(function()
+                local lastTime = 0
+
                 while LoopEnabled do
-                    local id = SoundIDs[SelectedName]
-                    if id then
-                        ExecuteSoundGun(id)
+                    local currentTime = tick()
+
+                    if currentTime - lastTime >= (1 / LoopSpeed) then
+                        lastTime = currentTime
+
+                        local id = SoundIDs[SelectedName]
+                        if id then
+                            ExecuteSoundGun(id)
+                        end
                     end
-                    task.wait(1 / LoopSpeed)
+
+                    RunService.Heartbeat:Wait()
                 end
             end)
         end
     end
 })
+
 
 --////////////////////////////////////////////////////
 --// ID PERSONALIZADO
