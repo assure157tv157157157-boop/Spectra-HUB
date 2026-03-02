@@ -93,10 +93,14 @@ local function AddLine(text)
 end
 
 -- LINHAS
-AddLine("novo botão de click fling portas")
-AddLine("novo botão info update que vai ter tudo sobre a nova update")
-AddLine("mais melhorias chegando")
-AddLine("otimizações internas")
+AddLine("A aba protection foi atualizada agora as proteção tá muito forte e nenhuma outro tipo de hub consegue encostar um dedo em você por que a proteção tira  a física de todos os veículos então nada consegue te atingir nem a  bola consegue te encostar nem o fling canoas ")
+AddLine("A aba skin foi reformulada em vez de botãos agora nois temos AddDropdown que vai ter tudo lá dentro blz ")
+AddLine("Trocamos os esp para um que e melhor muito melhor com EPS linhas EPS nome e esp caixa ")
+AddLine("O spin q fica lá na aba player foi melhorado ele vai até a velocidade 5.000 blz")
+AddLine("add mais de 8 sons ALL ")
+AddLine("foi isso espero que você tejam gostado 😁✌️")
+AddLine("estou trabalhando muito pra trazer o melhor para o spectra e para vocês")
+AddLine("então se a atualização demorar muito e por que eu estou trabalhando em coisas novas hihi 💪")
 
 -- DRAG
 local dragging = false
