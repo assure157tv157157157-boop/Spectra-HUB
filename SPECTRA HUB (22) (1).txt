@@ -1463,7 +1463,188 @@ TrollTab:AddToggle({
     end
 })
 
+TrollTab:AddSection({ "placas" })
 
+
+TrollTab:AddSection({
+    Name = "Placa ( By Bazuka)"
+})
+
+local textoPlaca = ""
+local selectedPlaca = nil
+
+local function getPlayersListPlaca()
+    local list = {}
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer then
+            table.insert(list, plr.Name)
+        end
+    end
+    return list
+end
+
+local function trocaPlaca(all, txt)
+    if all then
+        for _, v in next, Players:GetPlayers() do
+            if v.Character and v.Character:FindFirstChild("Sign") then
+                v.Character:FindFirstChild("Sign").ToolSound:FireServer("Sign", "SignWords", txt)
+            end
+        end
+    else
+        if selectedPlaca then
+            local target = Players:FindFirstChild(selectedPlaca)
+            if target and target.Character and target.Character:FindFirstChild("Sign") then
+                target.Character:FindFirstChild("Sign").ToolSound:FireServer("Sign", "SignWords", txt)
+            end
+        end
+    end
+end
+
+TrollTab:AddTextBox({
+    Name = "Texto da Placa",
+    PlaceholderText = "Texto da placa",
+    Callback = function(value)
+        textoPlaca = value
+    end
+})
+
+TrollTab:AddButton({
+    Name = "Trocar Placa all",
+    Callback = function()
+        trocaPlaca(true, textoPlaca)
+    end
+})
+
+
+--////////////////////////////////////////////////////
+--// TROCAR PLACA (PLAYER SELECIONADO)
+
+local textoPlaca = ""
+
+TrollTab:AddSection({
+    Name = "Trocar Placa (Player)"
+})
+
+TrollTab:AddTextBox({
+    Name = "Texto da Placa",
+    PlaceholderText = "Digite o texto",
+    Callback = function(v)
+        textoPlaca = v
+    end
+})
+
+TrollTab:AddButton({
+    Name = "Trocar Placa",
+    Callback = function()
+
+        if selectedPlayer then
+            local target = Players:FindFirstChild(selectedPlayer)
+
+            if target and target.Character and target.Character:FindFirstChild("Sign") then
+                target.Character.Sign.ToolSound:FireServer(
+                    "Sign",
+                    "SignWords",
+                    textoPlaca
+                )
+            end
+        end
+
+    end
+})
+
+TrollTab:AddSection({ "anti tools" })
+
+--////////////////////////////////////////////////////
+--// ANTI TOOLS
+
+local antiAll = false
+local antiOne = false
+
+local function removeTools(target)
+    if target and target.Character then
+        local tool = target.Character:FindFirstChildOfClass("Tool")
+
+        if tool then
+            local triggerRemote = ReplicatedStorage.RE:FindFirstChild("1Playe1rTrigge1rEven1t")
+            local clearRemote = ReplicatedStorage.RE:FindFirstChild("1Clea1rTool1s")
+
+            if triggerRemote and clearRemote then
+
+                local args1 = {
+                    [1] = "AcceptedToolToServer",
+                    [2] = tool.Name,
+                    [3] = target
+                }
+
+                triggerRemote:FireServer(unpack(args1))
+
+                local args2 = {
+                    [1] = "ClearAllTools"
+                }
+
+                clearRemote:FireServer(unpack(args2))
+            end
+        end
+    end
+end
+
+--////////////////////////////////////////////////////
+-- ANTI TOOLS TODOS
+
+TrollTab:AddToggle({
+    Name = "Anti Tools all",
+    Default = false,
+    Callback = function(v)
+
+        antiAll = v
+
+        if v then
+            task.spawn(function()
+                while antiAll do
+
+                    for _,player in pairs(Players:GetPlayers()) do
+                        if player ~= plr then
+                            removeTools(player)
+                        end
+                    end
+
+                    task.wait(0.01)
+                end
+            end)
+
+        end
+    end
+})
+
+--////////////////////////////////////////////////////
+-- ANTI TOOLS PLAYER
+
+TrollTab:AddToggle({
+    Name = "Anti Tools Player Selecionado",
+    Default = false,
+    Callback = function(v)
+
+        antiOne = v
+
+        if v then
+            task.spawn(function()
+                while antiOne do
+
+                    if selectedPlayer then
+                        local target = Players:FindFirstChild(selectedPlayer)
+
+                        if target then
+                            removeTools(target)
+                        end
+                    end
+
+                    task.wait(0.01)
+                end
+            end)
+
+        end
+    end
+})
 
 
 TrollTab:AddSection({ "+18" })
