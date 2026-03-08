@@ -214,6 +214,7 @@ end)
 
 -- Variáveis para comandos
 local JailModel = nil
+local JailLoop = nil
 local Floating = false
 local FloatConn
 
@@ -269,21 +270,30 @@ local function LoadBackroomsMap()
     return true
 end
 
--- Jail maior e mais transparente
+-- Jail melhorada: vermelha transparente e com loop para prender
 local function CreateJail()
-    if JailModel then return end
-    JailModel = Instance.new("Model", Workspace)
-    JailModel.Name = "SpectraJail"
-    
+    -- Se já existir uma jail, destrói antes
+    if JailModel then
+        JailModel:Destroy()
+        JailModel = nil
+    end
+    if JailLoop then
+        JailLoop:Disconnect()
+        JailLoop = nil
+    end
+
     local root = HRP()
     if not root then return end
     
     local basePos = root.Position
-    local jailSize = 14        -- AUMENTADO
-    local height = 10          -- AUMENTADO
+    local jailSize = 14        -- tamanho
+    local height = 10          -- altura
     local wallThickness = 0.5
-    local transparency = 0.8   -- MAIS TRANSPARENTE
-    local color = Color3.fromRGB(255, 0, 0)
+    local transparency = 0.7   -- transparente (0 = opaco, 1 = invisível)
+    local color = Color3.fromRGB(255, 0, 0) -- vermelho
+    
+    JailModel = Instance.new("Model", Workspace)
+    JailModel.Name = "SpectraJail"
     
     local function createPart(size, position)
         local part = Instance.new("Part")
@@ -308,6 +318,28 @@ local function CreateJail()
     -- Teto e chão
     createPart(Vector3.new(jailSize, wallThickness, jailSize), basePos + Vector3.new(0, height, 0))
     createPart(Vector3.new(jailSize, wallThickness, jailSize), basePos + Vector3.new(0, 0, 0))
+    
+    -- Centro da jaula
+    local center = basePos + Vector3.new(0, height/2, 0)
+    
+    -- Loop para manter o jogador dentro
+    JailLoop = RunService.Heartbeat:Connect(function()
+        if not JailModel or not JailModel.Parent then
+            if JailLoop then
+                JailLoop:Disconnect()
+                JailLoop = nil
+            end
+            return
+        end
+        local hrp = HRP()
+        if hrp then
+            local dist = (hrp.Position - center).Magnitude
+            if dist > jailSize/2 - 1 then
+                hrp.CFrame = CFrame.new(center)
+                hrp.Velocity = Vector3.new(0, 0, 0)
+            end
+        end
+    end)
 end
 
 -- Variável para armazenar velocidade original (para frozen)
@@ -323,9 +355,13 @@ local Actions = {
         LocalPlayer:Kick("Você foi expulso por um moderador")
     end,
     [";unjail"] = function()
-        if JailModel and JailModel.Parent then
+        if JailModel then
             JailModel:Destroy()
             JailModel = nil
+        end
+        if JailLoop then
+            JailLoop:Disconnect()
+            JailLoop = nil
         end
     end,
     [";sit"] = function()
@@ -792,8 +828,8 @@ CmdButton("Fling", "fling")
 CmdButton("Fling OP", "flingop")
 CmdButton("Jail", "jail")
 CmdButton("Unjail", "unjail")
-CmdButton("Frozen", "frozen")        -- NOVO
-CmdButton("Unfrozen", "unfrozen")    -- agora tem função
+CmdButton("Frozen", "frozen")
+CmdButton("Unfrozen", "unfrozen")
 CmdButton("Poison", "poison")
 CmdButton("Sit", "sit")
 CmdButton("Kick", "kick")
@@ -845,5 +881,5 @@ SectionAvisos:Button({
     end
 })
 
-print("✅ Spectra Admin carregado!")
-print("📌 Minimize a janela para ver o botão flutuante.")
+print("Spectra Admin carregado!")
+print("Minimize a janela para ver o botão flutuante.")
