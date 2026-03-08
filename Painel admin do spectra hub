@@ -744,7 +744,7 @@ WindUI:SetTheme("Dark")
 
 local Window = WindUI:CreateWindow({
     Title = "Spectra Admin",
-    Icon = "rbxassetid://111496334196",
+    Icon = "rbxassetid://97965813136525",
     Author = "by Spectra Estúdios",
     Folder = "Spectra Admin",
     Size = UDim2.fromOffset(550, 400),
@@ -754,7 +754,7 @@ local Window = WindUI:CreateWindow({
     HasOutline = false,
     HideSearchBar = true,
     ScrollBarEnabled = false,
-    Background = "rbxassetid://991372550501",
+    Background = "rbxassetid://77852068306802",
     BackgroundImageTransparency = 0.10,
     User = {
         Enabled = true,
@@ -766,10 +766,10 @@ Window:EditOpenButton({
     Title = " Spectra Admin ",
     Icon = "monitor",
     CornerRadius = UDim.new(0, 6),
-    StrokeThickness = 2,
+    StrokeThickness = 4,
     Color = ColorSequence.new(
-        Color3.fromRGB(255, 0, 0),
-        Color3.fromRGB(220, 100, 0)
+        Color3.fromRGB(1, 0, 0),
+        Color3.fromRGB(180, 0, 0)
     ),
     Draggable = true
 })
