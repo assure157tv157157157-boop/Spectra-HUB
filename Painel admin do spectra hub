@@ -37,8 +37,8 @@ getgenv().SpectraConfig = {
     AuthorizedPlayersURL = "https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Lista%20de%20pessoas%20no%20painel%20admin",
     SpecialTags = {
         ["udydydi2usy6d6d"] = "Dono Spectra",
-        [""] = "admin",
-        [""] = "admin"
+        [""] = "sub dono Spectra",
+        [""] = "chefe geral"
     }
 }
 
@@ -764,7 +764,7 @@ local Window = WindUI:CreateWindow({
 
 Window:EditOpenButton({
     Title = " Spectra Admin ",
-    Icon = "monitor",
+    Icon = 'rbxassetid://118710163391119',
     CornerRadius = UDim.new(0, 6),
     StrokeThickness = 4,
     Color = ColorSequence.new(
