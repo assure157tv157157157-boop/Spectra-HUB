@@ -13,19 +13,26 @@ plr.CharacterAdded:Connect(function(char)
     humanoid = char:WaitForChild("Humanoid")
 end)
 
---// UI LIB
-local Library = loadstring(game:HttpGet("https://pastefy.app/e1FtdOdx/raw"))()
+
+--------library do spectra hub novo--------------------
+
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Scripts-do-spectra-hub/refs/heads/main/Spectra%20lib"))() -- substitua pela URL da sua lib
 
 local Window = Library:MakeWindow({
-    Title = "Spectra hub | Brookhaven RP 🏡",
+    Title = "Spectra hub",
     SubTitle = "by: assure_TV",
-    LoadText = "Carregando Spectra",
-    Flags = "Spectrahub_Brookhaven"
+    Icon = "rbxassetid://111496334196615", -- ícone opcional
+    Background = "rbxassetid://95481443486346", -- nova imagem de fundo
+    BackgroundImageTransparency = 0, -- transparência
+    SaveFolder = "spectra hub"
 })
 
+
 Window:AddMinimizeButton({
-    Button = { Image = "rbxassetid://107533266955045", BackgroundTransparency = 0 },
-    Corner = { CornerRadius = UDim.new(35, 1) }
+    Size = UDim2.fromOffset(50, 50),
+    Button = { Image = "rbxassetid://72497169270723", BackgroundTransparency = 0},
+    Corner = { CornerRadius = UDim.new(0.5, 0) } -- círculo perfeito
 })
 
 
@@ -187,19 +194,32 @@ PlayerTab:AddButton({
 
 
 
+-- Variável para armazenar a conexão do evento
+local jumpConnection
 
-
---// INFINITE JUMP
-local InfiniteJumpEnabled = false
-
+-- Toggle de Infinity Jump
 PlayerTab:AddToggle({
-    Name = "Infinite Jump",
+    Name = "Infinity Jump",
     Default = false,
-    Callback = function(state)
-        InfiniteJumpEnabled = state
+    Callback = function(value)
+        if value then
+            -- Ativando Infinity Jump
+            jumpConnection = game:GetService("UserInputService").JumpRequest:Connect(function()
+                local player = game.Players.LocalPlayer
+                local character = player.Character
+                if character and character:FindFirstChild("Humanoid") then
+                    character.Humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+                end
+            end)
+        else
+            -- Desativando Infinity Jump
+            if jumpConnection then
+                jumpConnection:Disconnect()
+                jumpConnection = nil
+            end
+        end
     end
 })
-
 
 
 
@@ -3816,6 +3836,30 @@ local Phonk = {
 
 local Funk = {
 ["Automotivo no bico da garrafa"] = "107047372509033",
+["músicas boas"] = "",
+["bota ela pra sentar"] = "133679572515204",
+["índio"] = "133318423431098",
+["sperma"] = "73144366170218",
+["fantasma"] = "76699533647710",
+["Macporra"] = "102325227710789",
+["eu n sou gay"] = "85523458332774",
+["meia noite"] = "82117652303865",
+["união flasco"] = "81628621752701",
+["dom dom dom"] = "101882948595303",
+["tipo nino"] = "140336018782383",
+["nino pt2"] = "97708834121472",
+["puro lança"] = "128441181589899",
+["dança do canguru"] = "86876136192157",
+["melodia"] = "139147474886402",
+["cappuccino assassino"] = "132733033157915",
+["bonde do Discord"] = "79581762870032",
+["bitch"] = "103288558732219",
+["rebola"] = "121046655523341",
+["posso até não te dar flores"] = "107708637749079",
+["Savana Teto"] = "135327809788134",
+["bota aqui na base"] = "72970505446502",
+["Aí que saudade do cherin do Block blashe"] = "124638151165836",
+["Tiger roubadona"] = "125329520501218",
 ["Beat Malvado DJ OBL"] = "83174160244345",
 ["Automotivo do Pou 2.0 DJ NK3"] = "104826703821683",
 ["Recebi uma mensagem da sua amiguinha MC Lan"] = "130637458480604",
@@ -4731,11 +4775,14 @@ Tab14:AddButton({
 
 
 
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20logs.txt"))()
 
 
 
+
 loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20props%20(1).txt"))()
+
 
 
 loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Painel%20admin%20do%20spectra%20hub"))()
