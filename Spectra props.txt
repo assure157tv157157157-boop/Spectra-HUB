@@ -1868,7 +1868,7 @@ TrollTab:AddSlider({
 
 TrollTab:AddSection({"prop para usar em players selecionados"})
 
-TrollTab:AddSection({"prop kill"})
+TrollTab:AddSection({"prop p#nt@"})
 
 
 --===============================
@@ -1974,7 +1974,7 @@ local function StopGG()
 end
 
 TrollTab:AddToggle({
-    Name = "pinto na frente do jogador",
+    Name = "p#nt@ na frente do jogador",
     Default = false,
     Callback = function(v)
 
@@ -1991,7 +1991,7 @@ TrollTab:AddToggle({
 
 
 
-TrollTab:AddSection({"prop portal"})
+TrollTab:AddSection({"prop kill"})
 
 --===============================
 -- PROP LOUCO LOOP
