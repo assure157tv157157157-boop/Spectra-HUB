@@ -1,4 +1,81 @@
 --// SERVICES
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RE = ReplicatedStorage:WaitForChild("RE")
+
+--// TEXTO ORIGINAL
+local NAME = "Spectra HUB"
+local BIO = "• | Spectra on | ✓"
+
+--// CONTROLE
+local running = true
+
+--// FIRE
+local function fire(event,args)
+    local r = RE:FindFirstChild(event)
+    if r then
+        pcall(function()
+            r:FireServer(unpack(args))
+        end)
+    end
+end
+
+--// EXECUTA UMA VEZ
+fire("1RPNam1eTex1t",{"RolePlayName",NAME})
+fire("1RPNam1eTex1t",{"RolePlayBio",BIO})
+
+--// PRETO -> VERMELHO -> PRETO
+local function getColor()
+    local t = (math.sin(tick()*0.9)+1)/2
+    return Color3.new(t,0,0)
+end
+
+--// LOOP DE COR
+task.spawn(function()
+
+    while running do
+
+        local color = getColor()
+
+        fire("1RPNam1eColo1r",{"PickingRPNameColor",color})
+        fire("1RPNam1eColo1r",{"PickingRPBioColor",color})
+
+        task.wait(0.03)
+
+    end
+
+end)
+
+--// DETECTAR MUDANÇA
+local mt
+mt = hookmetamethod(game,"__namecall",function(self,...)
+
+    local args = {...}
+    local method = getnamecallmethod()
+
+    if method == "FireServer" and self.Name == "1RPNam1eTex1t" then
+
+        if args[1] == "RolePlayName" then
+            if args[2] ~= NAME then
+                running = false
+            end
+        end
+
+    end
+
+    return mt(self,...)
+end)
+
+
+
+
+
+
+
+
+
+
+
+--// SERVICES
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
