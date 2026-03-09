@@ -4857,8 +4857,7 @@ loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-
 
 
 
-
-loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20props%20(1).txt"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Spectra%20props.txt"))()
 
 
 
