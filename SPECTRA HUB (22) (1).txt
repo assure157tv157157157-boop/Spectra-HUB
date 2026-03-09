@@ -3,7 +3,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RE = ReplicatedStorage:WaitForChild("RE")
 
 --// TEXTO ORIGINAL
-local NAME = "Spectra HUB"
+local NAME = "「Spectra HUB」"
 local BIO = "• | Spectra on | ✓"
 
 --// CONTROLE
