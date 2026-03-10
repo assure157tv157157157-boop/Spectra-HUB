@@ -2368,6 +2368,38 @@ skyboxTab:AddToggle({
 
 
 
+--////////////////////////////////////////////////////
+--// TAB SCRIPTS
+local Tabfe = Window:MakeTab({
+    Title = "fe",
+    Icon = "rbxassetid://15819823738"
+})
+
+Tabfe:AddSection({ "fes" })
+
+Tabfe:AddButton({
+    Name = "coringa",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Fe/refs/heads/main/Fe%20coringa"))()
+    end
+})
+
+
+
+Tabfe:AddButton({
+    Name = "Bob esponja",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Fe/refs/heads/main/Fe%20do%20Bob%20esponja"))()
+    end
+})
+
+
+
+Tabfe:AddSection({ "vou adicionar mais em breve rapaziada" })
+
+
+
+
 
 
 local CarTab = Window:MakeTab({
