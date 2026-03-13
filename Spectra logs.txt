@@ -57,7 +57,7 @@ local timestamp = os.date("%d/%m/%Y - %X")
 -- 6. Lógica de Servidor Público/Privado e Imagens
 local isPrivate = game.PrivateServerId ~= "" or game.PrivateServerOwnerId ~= 0
 local serverType = isPrivate and "Privado" or "Público"
-local embedImage = isPrivate and "https://i.postimg.cc/Cxbg1wgS/kermit-(2).gif" or "https://i.postimg.cc/6QjtsYKn/jjk-jujutsu-kaisen.gif"
+local embedImage = isPrivate and "https://i.postimg.cc/R0rHtzGn/sukuna-jjk-sukuna.gif" or "https://i.postimg.cc/R0rHtzGn/sukuna-jjk-sukuna.gif"
 
 -- 7. Preparação do Webhook
 local webhookData = {
