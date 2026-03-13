@@ -328,17 +328,6 @@ RunService.RenderStepped:Connect(function(dt)
     end
 end)
 
-RunService.Stepped:Connect(function()
-    if NoclipEnabled and plr.Character then
-        for _, part in ipairs(plr.Character:GetDescendants()) do
-            if part:IsA("BasePart") then
-                part.CanCollide = false
-            end
-        end
-    end
-end)
-
-
 
 --////////////////////////////////////////////////////
 --// ANTI-SIT
