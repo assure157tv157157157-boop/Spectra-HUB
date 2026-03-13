@@ -73,8 +73,6 @@ end)
 
 
 
-
-
 --// SERVICES
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -2398,7 +2396,7 @@ skyboxTab:AddToggle({
 
 
 --////////////////////////////////////////////////////
---// TAB SCRIPTS
+--// TAB fes
 local Tabfe = Window:MakeTab({
     Title = "fe",
     Icon = "rbxassetid://15819823738"
@@ -2421,6 +2419,15 @@ Tabfe:AddButton({
         loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Fe/refs/heads/main/Fe%20do%20Bob%20esponja"))()
     end
 })
+
+
+Tabfe:AddButton({
+    Name = "Shadow",
+    Callback = function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/assure157tv157157157-boop/Fe/refs/heads/main/Shadow"))()
+    end
+})
+
 
 
 
@@ -3922,6 +3929,10 @@ MusicTab:AddSection({ "é preciso game pass para ouvir as músicas" })
 local Phonk = {
 ["Montagem Espanca Loli"] = "98623641908787",
 ["Montagem os 3 macete"] = "138730944430517",
+["MONTAGEM AUTOMOTIVA DO FUTURO"] = "87299594714360",
+["MONTAGEM VEM F*D*R NA ONDA DA LOLO"] = "79919454273891",
+["Automotivo new"] = "135721378392049",
+["MONTAGEM SANTA "] = "132597601384537",
 ["Montagem soca na danada"] = "100337717591420",
 ["Montagem Emirados Árabe"] = "98412934676146",
 ["Montagem Espanca Mente 2"] = "135729578171550",
@@ -3974,7 +3985,18 @@ local Phonk = {
 
 local Funk = {
 ["Automotivo no bico da garrafa"] = "107047372509033",
-["músicas boas"] = "",
+["OFF THE KING"] = "120324849313242",
+["amo"] = "96259351729049",
+["meu IPHONE"] = "103288558732219",
+["082 assombra"] = "139969588022082",
+["SEU EX TA NERVOSO DEMAIS"] = "125175056369746",
+["Me desbroqueia papai"] = "84571646803645",
+["ela e fogosa vem sentando"] = "76079350135381",
+["Baile dos antares "] = "16331041475",
+["CHARLIE KIRKY"] = "79910195620356",
+["Vai deitar sem sono"] = "128219511199109",
+["Novinha no grau"] = "100511855558684",
+["BROTA NA BASE"] = "72970505446502",
 ["bota ela pra sentar"] = "133679572515204",
 ["índio"] = "133318423431098",
 ["sperma"] = "73144366170218",
@@ -4066,7 +4088,11 @@ local Forro = {
 ["Em breve mais músicas"] = "",
 ["forró ja cansou"] = "74812784884330",
 ["escolha certa"] = "107088620814881",
+["EU TAVA AQUI PENSANDO"] = "82929658013383",
+["Se eu velejar"] = "108383593687416",
 ["lembro ate hoje"] = "71531533552899",
+["Já Que Me Ensinou a Beber"] = "103709364683928",
+["Se Eu Velejar"] = "108383593687416",
 ["forró da resenha"] = "120973520531216"
 }
 
