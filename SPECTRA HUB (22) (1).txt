@@ -299,6 +299,46 @@ PlayerTab:AddToggle({
 })
 
 
+-- Noclip
+local NoclipEnabled = false
+local noclipConnection
+
+PlayerTab:AddToggle({
+    Name = "Noclip",
+    Default = false,
+    Callback = function(state)
+        NoclipEnabled = state
+
+        if state then
+            noclipConnection = RunService.Stepped:Connect(function()
+                local char = plr.Character
+                if char then
+                    for _, part in ipairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        else
+            if noclipConnection then
+                noclipConnection:Disconnect()
+                noclipConnection = nil
+            end
+
+            local char = plr.Character
+            if char then
+                for _, part in ipairs(char:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+        end
+    end
+})
+
+
 
 --// SPIN
 PlayerTab:AddSection({ "Spin" })
