@@ -1,1 +1,1096 @@
+--// ServiÃ§os
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
+local Debris = game:GetService("Debris")
+local CoreGui = game:GetService("CoreGui")
+local UserInputService = game:GetService("UserInputService")
+local Lighting = game:GetService("Lighting")
+local SoundService = game:GetService("SoundService")
+local TextChatService = game:GetService("TextChatService")
 
+local LocalPlayer = Players.LocalPlayer
+
+-- Aguarda o personagem carregar
+repeat task.wait() until LocalPlayer.Character
+
+--// Board (leitura)
+local BoardLabel = Workspace:WaitForChild("WorkspaceCom")
+    :WaitForChild("001_OfficeBuildings")
+    :WaitForChild("OfficeSigns")
+    :WaitForChild("OfficeSign3")
+    :WaitForChild("Mod")
+    :WaitForChild("Frame")
+    :WaitForChild("TextLabel")
+
+--// Board Count (escrita)
+local BoardCount = Workspace.WorkspaceCom["001_OfficeBuildings"].OfficeSigns.OfficeSign3.Count
+
+--// Remote de escrita
+local BoardRemote = ReplicatedStorage:WaitForChild("RE"):WaitForChild("1Schoo1lDr1yBoard1s")
+
+-- ========================================
+-- SISTEMA DE WHITELIST E TAGS (SPECTRA)
+-- ========================================
+
+-- CONFIGURAÃ‡ÃƒO
+getgenv().SpectraConfig = {
+    AuthorizedPlayersURL = "https://raw.githubusercontent.com/assure157tv157157157-boop/Spectra-HUB/refs/heads/main/Lista%20de%20pessoas%20no%20painel%20admin",
+    SpecialTags = {
+        ["udydydi2usy6d6d"] = "Dono Spectra",
+        [""] = "admin",
+        [""] = "admin"
+    }
+}
+
+local ActiveTags = {}
+local AuthorizedPlayersList = {}
+
+-- Carrega lista de usuÃ¡rios autorizados
+pcall(function()
+    AuthorizedPlayersList = loadstring(game:HttpGet(getgenv().SpectraConfig.AuthorizedPlayersURL))()
+end)
+
+local function IsPlayerAuthorized(playerName)
+    if getgenv().SpectraConfig.SpecialTags[playerName] then return true end
+    if type(AuthorizedPlayersList) ~= "table" then return false end
+    local lowerName = string.lower(tostring(playerName))
+    for _, name in ipairs(AuthorizedPlayersList) do
+        if string.lower(tostring(name)) == lowerName then
+            return true
+        end
+    end
+    return false
+end
+
+local function GetCargo(playerName)
+    if getgenv().SpectraConfig.SpecialTags[playerName] then
+        return getgenv().SpectraConfig.SpecialTags[playerName]
+    elseif IsPlayerAuthorized(playerName) then
+        return "Moderador Spectra"
+    end
+    return ""
+end
+
+-- FunÃ§Ã£o para criar tags (cores ajustadas)
+local function CreatePlayerTag(playerName, tagText, tagName, borderColor, gradientColor)
+    tagName = tagName or "SpectraTag"
+    local player = Players:FindFirstChild(playerName)
+    if not player or not player.Character then return end
+    local head = player.Character:FindFirstChild("Head")
+    if not head then return end
+    
+    -- Remove tag antiga com mesmo nome se existir
+    if ActiveTags[playerName] and ActiveTags[playerName][tagName] then
+        local old = ActiveTags[playerName][tagName].Billboard
+        if old and old.Parent then
+            old:Destroy()
+        end
+        ActiveTags[playerName][tagName] = nil
+    end
+
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Name = tagName
+    billboardGui.Adornee = head
+    billboardGui.Size = UDim2.new(0, 200, 0, 40)
+    billboardGui.AlwaysOnTop = true
+    billboardGui.StudsOffset = Vector3.new(0, 3, 0)
+    billboardGui.MaxDistance = 150
+    billboardGui.Parent = head
+
+    local frame = Instance.new("Frame", billboardGui)
+    frame.Size = UDim2.new(1, 0, 1, 0)
+    frame.BackgroundColor3 = Color3.new(0, 0, 0)
+    frame.BackgroundTransparency = 0.2
+    frame.BorderSizePixel = 0
+    local corner = Instance.new("UICorner", frame)
+    corner.CornerRadius = UDim.new(0, 8)
+
+    -- Gradiente de fundo (usa a cor primÃ¡ria)
+    local gradient = Instance.new("UIGradient", frame)
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, gradientColor or Color3.fromRGB(139, 0, 0)), -- vermelho escuro
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 0, 0)),
+        ColorSequenceKeypoint.new(1, gradientColor or Color3.fromRGB(139, 0, 0))
+    })
+    gradient.Rotation = 45
+
+    -- Borda (cor definida)
+    local stroke = Instance.new("UIStroke", frame)
+    stroke.Color = borderColor or Color3.fromRGB(139, 0, 0) -- vermelho escuro
+    stroke.Thickness = 2
+    stroke.Transparency = 0.2
+
+    local textLabel = Instance.new("TextLabel", frame)
+    textLabel.Size = UDim2.new(1, -10, 1, -10)
+    textLabel.Position = UDim2.new(0, 5, 0, 5)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Text = tagText
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.TextSize = 16
+    textLabel.Font = Enum.Font.GothamBold
+    textLabel.TextStrokeTransparency = 0.3
+    textLabel.TextStrokeColor3 = Color3.new(0, 0, 0)
+
+    if not ActiveTags[playerName] then ActiveTags[playerName] = {} end
+    ActiveTags[playerName][tagName] = { Billboard = billboardGui, TagText = tagText }
+end
+
+-- Monitoramento otimizado (a cada 2 segundos)
+local function StartTagMonitor(player, tagText, tagName, borderColor, gradientColor)
+    if not player then return end
+    tagName = tagName or "SpectraTag"
+    
+    local function checkAndApply()
+        if not player.Parent then return end
+        if not player.Character then return end
+        local head = player.Character:FindFirstChild("Head")
+        if not head then return end
+        
+        local existing = head:FindFirstChild(tagName)
+        if not existing then
+            CreatePlayerTag(player.Name, tagText, tagName, borderColor, gradientColor)
+        end
+    end
+    
+    -- Aplica agora
+    checkAndApply()
+    
+    -- Loop a cada 2 segundos
+    local connection
+    connection = task.spawn(function()
+        while player.Parent do
+            task.wait(2)
+            checkAndApply()
+        end
+    end)
+    
+    -- Limpeza quando o jogador sair
+    player.AncestryChanged:Connect(function()
+        if not player.Parent then
+            task.cancel(connection)
+        end
+    end)
+end
+
+local function createSpecialTag(player)
+    if not player then return end
+    
+    local tagText
+    local borderColor
+    local gradientColor
+    if getgenv().SpectraConfig.SpecialTags[player.Name] then
+        tagText = getgenv().SpectraConfig.SpecialTags[player.Name]
+        borderColor = Color3.fromRGB(139, 0, 0) -- vermelho escuro
+        gradientColor = Color3.fromRGB(100, 0, 0) -- vermelho mais escuro para gradiente
+    elseif IsPlayerAuthorized(player.Name) then
+        tagText = "Moderador Spectra"
+        borderColor = Color3.fromRGB(139, 0, 0) -- vermelho escuro
+        gradientColor = Color3.fromRGB(100, 0, 0)
+    end
+    
+    if tagText then
+        StartTagMonitor(player, tagText, "SpectraTag", borderColor, gradientColor)
+    end
+end
+
+for _, p in pairs(Players:GetPlayers()) do
+    createSpecialTag(p)
+end
+
+Players.PlayerAdded:Connect(function(p)
+    createSpecialTag(p)
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+    if ActiveTags[player.Name] then
+        for _, tagData in pairs(ActiveTags[player.Name]) do
+            if tagData.Billboard then
+                pcall(function() tagData.Billboard:Destroy() end)
+            end
+        end
+        ActiveTags[player.Name] = nil
+    end
+end)
+
+-- VariÃ¡veis para comandos
+local JailModel = nil
+local JailLoop = nil
+local Floating = false
+local FloatConn
+
+local function Char()
+    return LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
+end
+local function Humanoid()
+    return Char():WaitForChild("Humanoid")
+end
+local function HRP()
+    return Char():WaitForChild("HumanoidRootPart")
+end
+
+-- ========================================
+-- FUNÃ‡Ã•ES DE COMANDOS
+-- ========================================
+
+local function StartFloat()
+    if Floating then return end
+    Floating = true
+    Humanoid().WalkSpeed = 0
+    Humanoid().JumpPower = 0
+    FloatConn = RunService.Heartbeat:Connect(function()
+        HRP().AssemblyLinearVelocity = Vector3.new(0, 20, 0)
+    end)
+end
+
+LocalPlayer.CharacterAdded:Connect(function()
+    Floating = false
+    if FloatConn then
+        FloatConn:Disconnect()
+        FloatConn = nil
+    end
+end)
+
+local function LoadBackroomsMap()
+    local mapID = 10581711055
+    local success, model = pcall(function()
+        return game:GetObjects("rbxassetid://" .. mapID)[1]
+    end)
+    if not success or not model then return false end
+    local targetPos = Vector3.new(0, 10000, 0)
+    model.Parent = Workspace
+    local primary = model.PrimaryPart or model:FindFirstChildWhichIsA("BasePart")
+    if primary then
+        local offset = targetPos - primary.Position
+        for _, v in ipairs(model:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.CFrame = v.CFrame + offset
+            end
+        end
+    end
+    return true
+end
+
+-- Jail melhorada: vermelha transparente e com loop para prender
+local function CreateJail()
+    -- Se jÃ¡ existir uma jail, destrÃ³i antes
+    if JailModel then
+        JailModel:Destroy()
+        JailModel = nil
+    end
+    if JailLoop then
+        JailLoop:Disconnect()
+        JailLoop = nil
+    end
+
+    local root = HRP()
+    if not root then return end
+    
+    local basePos = root.Position
+    local jailSize = 14        -- tamanho
+    local height = 10          -- altura
+    local wallThickness = 0.5
+    local transparency = 0.7   -- transparente (0 = opaco, 1 = invisÃ­vel)
+    local color = Color3.fromRGB(255, 0, 0) -- vermelho
+    
+    JailModel = Instance.new("Model", Workspace)
+    JailModel.Name = "SpectraJail"
+    
+    local function createPart(size, position)
+        local part = Instance.new("Part")
+        part.Size = size
+        part.Position = position
+        part.Anchored = true
+        part.CanCollide = true
+        part.Material = Enum.Material.Glass
+        part.Color = color
+        part.Transparency = transparency
+        part.BrickColor = BrickColor.new("Really red")
+        part.Parent = JailModel
+        return part
+    end
+    
+    -- Paredes (caixa)
+    createPart(Vector3.new(wallThickness, height, jailSize), basePos + Vector3.new(jailSize/2, height/2, 0))
+    createPart(Vector3.new(wallThickness, height, jailSize), basePos + Vector3.new(-jailSize/2, height/2, 0))
+    createPart(Vector3.new(jailSize, height, wallThickness), basePos + Vector3.new(0, height/2, jailSize/2))
+    createPart(Vector3.new(jailSize, height, wallThickness), basePos + Vector3.new(0, height/2, -jailSize/2))
+    
+    -- Teto e chÃ£o
+    createPart(Vector3.new(jailSize, wallThickness, jailSize), basePos + Vector3.new(0, height, 0))
+    createPart(Vector3.new(jailSize, wallThickness, jailSize), basePos + Vector3.new(0, 0, 0))
+    
+    -- Centro da jaula
+    local center = basePos + Vector3.new(0, height/2, 0)
+    
+    -- Loop para manter o jogador dentro
+    JailLoop = RunService.Heartbeat:Connect(function()
+        if not JailModel or not JailModel.Parent then
+            if JailLoop then
+                JailLoop:Disconnect()
+                JailLoop = nil
+            end
+            return
+        end
+        local hrp = HRP()
+        if hrp then
+            local dist = (hrp.Position - center).Magnitude
+            if dist > jailSize/2 - 1 then
+                hrp.CFrame = CFrame.new(center)
+                hrp.Velocity = Vector3.new(0, 0, 0)
+            end
+        end
+    end)
+end
+
+-- VariÃ¡vel para armazenar velocidade original (para frozen)
+local frozenSpeed = {}
+
+-- Tabela de aÃ§Ãµes locais
+local Actions = {
+    [";kill"] = function() Humanoid().Health = 0 end,
+    [";fling"] = function() HRP().Velocity = Vector3.new(6000, 300, 6000) end,
+    [";flingop"] = function() HRP().Velocity = Vector3.new(0, 150000, 0) end,
+    [";jail"] = CreateJail,
+    [";kick"] = function()
+        LocalPlayer:Kick("VocÃª foi expulso por um moderador")
+    end,
+    [";unjail"] = function()
+        if JailModel then
+            JailModel:Destroy()
+            JailModel = nil
+        end
+        if JailLoop then
+            JailLoop:Disconnect()
+            JailLoop = nil
+        end
+    end,
+    [";sit"] = function()
+        local hum = Humanoid()
+        if not hum then return end
+        hum.Sit = true
+    end,
+    [";poison"] = function()
+        local hum = Humanoid()
+        if not hum then return end
+        task.spawn(function()
+            for i = 1, 20 do
+                if hum.Health <= 0 then break end
+                hum.Health = hum.Health - 3
+                task.wait(0.5)
+            end
+        end)
+    end,
+    [";killplus"] = function()
+        local hrp = HRP()
+        local hum = Humanoid()
+        if not hrp or not hum then return end
+        for i = 1, 45 do
+            local p = Instance.new("Part")
+            p.Size = Vector3.new(0.6, 0.6, 0.6)
+            p.Material = Enum.Material.Neon
+            p.Color = Color3.fromHSV(math.random(), 1, 1)
+            p.CFrame = hrp.CFrame
+            p.Anchored = false
+            p.CanCollide = true
+            p.AssemblyLinearVelocity = Vector3.new(
+                math.random(-35, 35),
+                math.random(20, 45),
+                math.random(-35, 35)
+            )
+            p.Parent = Workspace
+            Debris:AddItem(p, 2.5)
+        end
+        hum.Health = 0
+    end,
+    [";frozen"] = function()
+        local hum = Humanoid()
+        if not hum then return end
+        frozenSpeed[LocalPlayer.Name] = hum.WalkSpeed
+        hum.WalkSpeed = 0
+        hum.JumpPower = 0
+    end,
+    [";unfrozen"] = function()
+        local hum = Humanoid()
+        if not hum then return end
+        hum.WalkSpeed = frozenSpeed[LocalPlayer.Name] or 16
+        hum.JumpPower = 50
+        frozenSpeed[LocalPlayer.Name] = nil
+    end,
+    [";bomb"] = function()
+        local e = Instance.new("Explosion")
+        e.Position = HRP().Position
+        e.BlastRadius = 20
+        e.Parent = Workspace
+        Humanoid().Health = 0
+    end,
+    [";float"] = function()
+        StartFloat()
+    end,
+    [";backrooms"] = function()
+        local root = HRP()
+        if not root then return end
+        local loaded = LoadBackroomsMap()
+        if loaded then
+            print("Mapa das backrooms carregado!")
+        end
+        root.CFrame = CFrame.new(59, 9996, 19)
+    end,
+}
+
+-- ========================================
+-- FUNÃ‡ÃƒO DE ANÃšNCIO BONITO (TÃTULO FIXO)
+-- ========================================
+local function CriarAnuncioBonito(texto)
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "SpectraAnnouncement"
+    screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    screenGui.DisplayOrder = 999
+    screenGui.IgnoreGuiInset = true
+
+    local blur = Instance.new("BlurEffect")
+    blur.Size = 0
+    blur.Parent = game.Lighting
+
+    local darkOverlay = Instance.new("Frame")
+    darkOverlay.Size = UDim2.fromScale(1, 1)
+    darkOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    darkOverlay.BackgroundTransparency = 1
+    darkOverlay.BorderSizePixel = 0
+    darkOverlay.Parent = screenGui
+
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 700, 0, 220)
+    frame.Position = UDim2.new(0.5, 0, -0.5, 0)
+    frame.AnchorPoint = Vector2.new(0.5, 0.5)
+    frame.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+    frame.BackgroundTransparency = 0.05
+    frame.BorderSizePixel = 0
+    frame.ClipsDescendants = false
+    frame.Parent = screenGui
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 24)
+    corner.Parent = frame
+
+    local outerStroke = Instance.new("UIStroke")
+    outerStroke.Color = Color3.fromRGB(255, 0, 0)
+    outerStroke.Thickness = 4
+    outerStroke.Transparency = 0
+    outerStroke.Parent = frame
+
+    local innerFrame = Instance.new("Frame")
+    innerFrame.Size = UDim2.new(1, -8, 1, -8)
+    innerFrame.Position = UDim2.fromScale(0.5, 0.5)
+    innerFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    innerFrame.BackgroundTransparency = 1
+    innerFrame.Parent = frame
+
+    local innerStroke = Instance.new("UIStroke")
+    innerStroke.Color = Color3.fromRGB(139, 0, 0)
+    innerStroke.Thickness = 2
+    innerStroke.Transparency = 0.3
+    innerStroke.Parent = innerFrame
+
+    local innerCorner = Instance.new("UICorner")
+    innerCorner.CornerRadius = UDim.new(0, 20)
+    innerCorner.Parent = innerFrame
+
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 0, 0)),
+        ColorSequenceKeypoint.new(0.3, Color3.fromRGB(100, 0, 0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(139, 0, 0)),
+        ColorSequenceKeypoint.new(0.7, Color3.fromRGB(100, 0, 0)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 0, 0))
+    }
+    gradient.Rotation = 45
+    gradient.Parent = frame
+
+    local shine = Instance.new("Frame")
+    shine.Size = UDim2.new(0.4, 0, 2.5, 0)
+    shine.Position = UDim2.new(-0.4, 0, -0.5, 0)
+    shine.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    shine.BackgroundTransparency = 0.85
+    shine.BorderSizePixel = 0
+    shine.Rotation = 30
+    shine.Parent = frame
+
+    local iconContainer = Instance.new("Frame")
+    iconContainer.Size = UDim2.new(0, 100, 0, 100)
+    iconContainer.Position = UDim2.new(0, 25, 0.5, 0)
+    iconContainer.AnchorPoint = Vector2.new(0, 0.5)
+    iconContainer.BackgroundColor3 = Color3.fromRGB(139, 0, 0)
+    iconContainer.BackgroundTransparency = 0.1
+    iconContainer.BorderSizePixel = 0
+    iconContainer.Parent = frame
+
+    local iconCorner = Instance.new("UICorner")
+    iconCorner.CornerRadius = UDim.new(1, 0)
+    iconCorner.Parent = iconContainer
+
+    local iconStroke = Instance.new("UIStroke")
+    iconStroke.Color = Color3.fromRGB(255, 50, 50)
+    iconStroke.Thickness = 3
+    iconStroke.Transparency = 0
+    iconStroke.Parent = iconContainer
+
+    local iconGradient = Instance.new("UIGradient")
+    iconGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(200, 0, 0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 50, 50)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(200, 0, 0))
+    }
+    iconGradient.Parent = iconContainer
+
+    local icon = Instance.new("TextLabel")
+    icon.Size = UDim2.fromScale(1, 1)
+    icon.BackgroundTransparency = 1
+    icon.Text = "ðŸ“¢"
+    icon.Font = Enum.Font.GothamBold
+    icon.TextSize = 50
+    icon.TextColor3 = Color3.fromRGB(255, 255, 255)
+    icon.Parent = iconContainer
+
+    local textContainer = Instance.new("Frame")
+    textContainer.Size = UDim2.new(1, -155, 1, -30)
+    textContainer.Position = UDim2.new(0, 135, 0, 15)
+    textContainer.BackgroundTransparency = 1
+    textContainer.Parent = frame
+
+    local topLine = Instance.new("Frame")
+    topLine.Size = UDim2.new(1, 0, 0, 2)
+    topLine.Position = UDim2.new(0, 0, 0, 40)
+    topLine.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    topLine.BackgroundTransparency = 0.3
+    topLine.BorderSizePixel = 0
+    topLine.Parent = textContainer
+
+    local lineGradient = Instance.new("UIGradient")
+    lineGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0, 0)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 100, 100)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0, 0))
+    }
+    lineGradient.Parent = topLine
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, 0, 0, 35)
+    title.BackgroundTransparency = 1
+    title.Text = "âš¡ MENSAGEM DO MODERADOR âš¡"  -- TÃTULO FIXO
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 26
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.TextStrokeTransparency = 0
+    title.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    title.Parent = textContainer
+
+    local titleGradient = Instance.new("UIGradient")
+    titleGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 100, 100)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 255, 255)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 100, 100))
+    }
+    titleGradient.Parent = title
+
+    local content = Instance.new("TextLabel")
+    content.Size = UDim2.new(1, 0, 1, -80)
+    content.Position = UDim2.new(0, 0, 0, 65)
+    content.BackgroundTransparency = 1
+    content.Text = texto
+    content.Font = Enum.Font.Gotham
+    content.TextSize = 20
+    content.TextColor3 = Color3.fromRGB(255, 255, 255)
+    content.TextXAlignment = Enum.TextXAlignment.Left
+    content.TextYAlignment = Enum.TextYAlignment.Top
+    content.TextWrapped = true
+    content.TextStrokeTransparency = 0.7
+    content.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    content.Parent = textContainer
+
+    local progressBar = Instance.new("Frame")
+    progressBar.Size = UDim2.new(0, 0, 0, 4)
+    progressBar.Position = UDim2.new(0, 0, 1, -10)
+    progressBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    progressBar.BorderSizePixel = 0
+    progressBar.Parent = textContainer
+
+    local progressCorner = Instance.new("UICorner")
+    progressCorner.CornerRadius = UDim.new(1, 0)
+    progressCorner.Parent = progressBar
+
+    TweenService:Create(blur, TweenInfo.new(0.5), {Size = 18}):Play()
+    TweenService:Create(darkOverlay, TweenInfo.new(0.5), {BackgroundTransparency = 0.4}):Play()
+    TweenService:Create(frame, TweenInfo.new(0.9, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0.5, 0, 0.5, 0)
+    }):Play()
+
+    task.spawn(function()
+        task.wait(0.5)
+        TweenService:Create(shine, TweenInfo.new(1.5, Enum.EasingStyle.Linear), {
+            Position = UDim2.new(1.4, 0, -0.5, 0)
+        }):Play()
+    end)
+
+    task.spawn(function()
+        while frame and frame.Parent do
+            TweenService:Create(gradient, TweenInfo.new(3, Enum.EasingStyle.Linear), {
+                Rotation = gradient.Rotation + 360
+            }):Play()
+            task.wait(3)
+        end
+    end)
+
+    task.spawn(function()
+        while frame and frame.Parent do
+            for i = 0, 1, 0.05 do
+                if not frame or not frame.Parent then break end
+                outerStroke.Transparency = 0.2 + (math.sin(i * math.pi * 2) * 0.4)
+                iconStroke.Transparency = 0.1 + (math.sin(i * math.pi * 2) * 0.3)
+                task.wait(0.05)
+            end
+        end
+    end)
+
+    TweenService:Create(progressBar, TweenInfo.new(7, Enum.EasingStyle.Linear), {
+        Size = UDim2.new(1, 0, 0, 4)
+    }):Play()
+
+    task.delay(7, function()
+        TweenService:Create(frame, TweenInfo.new(0.7, Enum.EasingStyle.Back, Enum.EasingDirection.In), {
+            Position = UDim2.new(0.5, 0, -0.5, 0),
+            Size = UDim2.new(0, 700, 0, 0)
+        }):Play()
+        TweenService:Create(blur, TweenInfo.new(0.7), {Size = 0}):Play()
+        TweenService:Create(darkOverlay, TweenInfo.new(0.7), {BackgroundTransparency = 1}):Play()
+        
+        task.wait(0.8)
+        screenGui:Destroy()
+        blur:Destroy()
+    end)
+end
+
+-- ========================================
+-- NOVAS FUNÃ‡Ã•ES (CHAT E JUMPSCARE)
+-- ========================================
+
+-- FunÃ§Ã£o para enviar mensagem no chat (fallback caso board nÃ£o exista)
+local function SendChat(msg)
+    local success, err = pcall(function()
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            TextChatService.TextChannels.RBXGeneral:SendAsync(msg)
+        else
+            ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(msg, "All")
+        end
+    end)
+    if not success then warn("Erro ao enviar chat:", err) end
+end
+
+-- Tabela de jumpscares
+local Jumpscares = {
+    jumps1 = { name = "jumps1", desc = "Jumpscare 1", image = "rbxassetid://126754882337711", sound = "rbxassetid://138873214826309" },
+    jumps2 = { name = "jumps2", desc = "Jumpscare 2", image = "rbxassetid://86379969987314", sound = "rbxassetid://143942090" },
+    jumps3 = { name = "jumps3", desc = "Jumpscare 3", image = "rbxassetid://127382022168206", sound = "rbxassetid://143942090" },
+    jumps4 = { name = "jumps4", desc = "Jumpscare 4", image = "rbxassetid://95973611964555", sound = "rbxassetid://138873214826309" },
+    therakejumpscare = {
+        name = "therakejumpscare", desc = "The Rake Jumpscare",
+        func = function()
+            local screenGui = Instance.new("ScreenGui")
+            screenGui.Name = "RakeJumpscare"
+            screenGui.Parent = CoreGui
+            screenGui.IgnoreGuiInset = true
+            screenGui.ResetOnSpawn = false
+            local imageLabel = Instance.new("ImageLabel")
+            imageLabel.Size = UDim2.new(1.2, 0, 1.2, 0)
+            imageLabel.Position = UDim2.new(-0.1, 0, -0.1, 0)
+            imageLabel.BackgroundTransparency = 1
+            imageLabel.Image = "rbxassetid://108753859505348"
+            imageLabel.Parent = screenGui
+            local sound1 = Instance.new("Sound")
+            sound1.SoundId = "rbxassetid://18967004856"
+            sound1.Volume = 5
+            sound1.Parent = SoundService
+            local sound2 = Instance.new("Sound")
+            sound2.SoundId = "rbxassetid://103396125105301"
+            sound2.Volume = 5
+            sound2.Parent = SoundService
+            local isShaking = true
+            task.spawn(function()
+                while isShaking do
+                    imageLabel.Position = UDim2.new(-0.1, math.random(-10,10), -0.1, math.random(-10,10))
+                    task.wait(0.02)
+                end
+            end)
+            sound1:Play()
+            task.delay(2, function()
+                sound2:Play()
+                sound2.Ended:Connect(function() isShaking = false; screenGui:Destroy() end)
+            end)
+        end
+    }
+}
+
+-- FunÃ§Ã£o para criar jumpscare na tela
+local function CriarJumpscareLocal(imageId, audioId)
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Name = "JumpscareFullscreen"
+    screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    screenGui.DisplayOrder = 2147483647
+    screenGui.ResetOnSpawn = false
+    screenGui.IgnoreGuiInset = true
+    screenGui.Parent = CoreGui
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Size = UDim2.new(1, 0, 1, 0)
+    mainFrame.Position = UDim2.new(0, 0, 0, 0)
+    mainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.ZIndex = 2147483647
+    mainFrame.Parent = screenGui
+
+    local imageLabel = Instance.new("ImageLabel")
+    imageLabel.Size = UDim2.new(1, 0, 1, 0)
+    imageLabel.Position = UDim2.new(0, 0, 0, 0)
+    imageLabel.BackgroundTransparency = 1
+    imageLabel.Image = imageId
+    imageLabel.ScaleType = Enum.ScaleType.Fit
+    imageLabel.ZIndex = 2147483647
+    imageLabel.Parent = mainFrame
+
+    local sound = Instance.new("Sound")
+    sound.SoundId = audioId
+    sound.Volume = 2.0
+    sound.Looped = false
+    sound.Parent = mainFrame
+
+    local flashCount = 12
+    local flashInterval = 0.1
+
+    sound:Play()
+    UserInputService.MouseIconEnabled = false
+
+    task.spawn(function()
+        for i = 1, flashCount do
+            if not screenGui.Parent then break end
+            imageLabel.ImageTransparency = (i % 2 == 0) and 0.1 or 0
+            task.wait(flashInterval)
+        end
+        imageLabel.ImageTransparency = 0
+        task.wait(0.8)
+        local fadeTween = TweenService:Create(imageLabel, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { ImageTransparency = 1 })
+        fadeTween:Play()
+        local bgFadeTween = TweenService:Create(mainFrame, TweenInfo.new(1.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), { BackgroundTransparency = 1 })
+        bgFadeTween:Play()
+        task.wait(2)
+        UserInputService.MouseIconEnabled = true
+        screenGui:Destroy()
+    end)
+end
+
+-- ========================================
+-- PROCESSADOR DE COMANDOS DO BOARD
+-- ========================================
+local function ProcessarComando(texto)
+    if not texto or texto == "" then return end
+
+    local comando = texto:lower()
+    local alvo = LocalPlayer.Name:lower()
+    
+    -- Comandos com alvo (aÃ§Ãµes locais)
+    for cmd, action in pairs(Actions) do
+        if comando:match(cmd .. "%s+" .. alvo) then
+            action()
+            return
+        end
+    end
+
+    -- Comando de anÃºncio global
+    if comando:match("^;anuncio ") then
+        local msg = texto:sub(9) -- remove ";anuncio "
+        CriarAnuncioBonito(msg)
+        return
+    end
+
+    -- Comando ;verifique
+    if comando == ";verifique" then
+        pcall(function()
+            ReplicatedStorage.RE["1Too1l"]:InvokeServer("PickingTools", "LaundryBasket")
+        end)
+
+        task.delay(0.5, function()
+            for _, player in ipairs(Players:GetPlayers()) do
+                local function possuiLaundry()
+                    return (player.Backpack and player.Backpack:FindFirstChild("LaundryBasket"))
+                        or (player.Character and player.Character:FindFirstChild("LaundryBasket"))
+                end
+
+                if possuiLaundry() and player.Character then
+                    local head = player.Character:FindFirstChild("Head")
+                    if head then
+                        -- Tag do verifique: vermelho meio amarelado (laranja avermelhado)
+                        CreatePlayerTag(player.Name, "UsuÃ¡rio Spectra", "SpectraVerifiedTag", 
+                            Color3.fromRGB(255, 69, 0),  -- borda laranja avermelhado
+                            Color3.fromRGB(180, 60, 0)) -- gradiente mais escuro
+                    end
+                end
+            end
+        end)
+        return
+    end
+
+    -- ========================================
+    -- NOVOS COMANDOS (Jumpscare e Say)
+    -- ========================================
+    
+    -- Comando ;say
+    if comando:match("^;say ") then
+        local _, _, alvoNome, mensagem = string.find(comando, "^;say ([^%s]+) (.+)$")
+        if alvoNome and mensagem and string.lower(alvoNome) == alvo then
+            SendChat(mensagem)
+        end
+        return
+    end
+
+    -- Comandos de jumpscare
+    for jumpscareName, data in pairs(Jumpscares) do
+        if comando:match("^;" .. jumpscareName .. "%s+" .. alvo .. "$") then
+            if data.func then
+                data.func()
+            else
+                CriarJumpscareLocal(data.image, data.sound)
+            end
+            return
+        end
+    end
+end
+
+-- Escuta o board
+BoardLabel:GetPropertyChangedSignal("Text"):Connect(function()
+    ProcessarComando(BoardLabel.Text)
+end)
+
+-- ========================================
+-- INTERFACE WINDUI
+-- ========================================
+
+if not IsPlayerAuthorized(LocalPlayer.Name) then
+    return
+end
+
+print("âœ… UsuÃ¡rio autorizado: " .. LocalPlayer.Name)
+print("âœ… Cargo: " .. GetCargo(LocalPlayer.Name))
+
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+task.wait(0.5)
+WindUI:SetTheme("Dark")
+
+local Window = WindUI:CreateWindow({
+    Title = "Spectra Admin",
+    Icon = "rbxassetid://97965813136525",
+    Author = "by Spectra EstÃºdios",
+    Folder = "Spectra Admin",
+    Size = UDim2.fromOffset(550, 400),
+    Transparent = true,
+    Theme = "Dark",
+    SideBarWidth = 190,
+    HasOutline = false,
+    HideSearchBar = true,
+    ScrollBarEnabled = false,
+    Background = "rbxassetid://77852068306802",
+    BackgroundImageTransparency = 0.10,
+    User = {
+        Enabled = true,
+        Anonymous = false
+    },
+})
+
+Window:EditOpenButton({
+    Title = " Spectra Admin ",
+    Icon = "monitor",
+    CornerRadius = UDim.new(0, 6),
+    StrokeThickness = 4,
+    Color = ColorSequence.new(
+        Color3.fromRGB(1, 0, 0),
+        Color3.fromRGB(180, 0, 0)
+    ),
+    Draggable = true
+})
+
+local SelectedPlayer = nil
+
+-- FunÃ§Ã£o para obter lista de jogadores (ordenada)
+local function GetPlayerNames()
+    local list = {}
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer then
+            table.insert(list, plr.Name)
+        end
+    end
+    table.sort(list)
+    return list
+end
+
+-- ReferÃªncias para os dropdowns (serÃ£o preenchidos depois)
+local PlayerDropdown
+local JumpscareDropdown
+local ChatDropdown
+
+-- FunÃ§Ã£o para atualizar todos os dropdowns
+local function RefreshAllDropdowns()
+    local newList = GetPlayerNames()
+    if PlayerDropdown then
+        PlayerDropdown:Refresh(newList)
+    end
+    if JumpscareDropdown then
+        JumpscareDropdown:Refresh(newList)
+    end
+    if ChatDropdown then
+        ChatDropdown:Refresh(newList)
+    end
+end
+
+-- Eventos de entrada/saÃ­da de jogadores
+Players.PlayerAdded:Connect(RefreshAllDropdowns)
+Players.PlayerRemoving:Connect(RefreshAllDropdowns)
+
+local function EnviarBoard(cmd, target)
+    if not target or target == "" then
+        BoardRemote:FireServer("ReturningBoardName", BoardCount, ";" .. cmd)
+    else
+        BoardRemote:FireServer("ReturningBoardName", BoardCount, ";" .. cmd .. " " .. target:lower())
+    end
+end
+
+-- ========================================
+-- ABA COMANDOS
+-- ========================================
+local Tab = Window:Tab({ Title = "Comandos", Icon = "terminal" })
+local CommandSection = Tab:Section({ Title = "Comandos Spectra", Icon = "user-cog", Opened = true })
+
+PlayerDropdown = CommandSection:Dropdown({
+    Title = "Selecionar Jogador",
+    Values = GetPlayerNames(),
+    Callback = function(value)
+        SelectedPlayer = value
+    end
+})
+
+local function CmdButton(title, cmd)
+    CommandSection:Button({
+        Title = title,
+        Callback = function()
+            if SelectedPlayer then
+                EnviarBoard(cmd, SelectedPlayer)
+            end
+        end
+    })
+end
+
+CmdButton("Kill", "kill")
+CmdButton("KillPlus", "killplus")
+CmdButton("Fling", "fling")
+CmdButton("Fling OP", "flingop")
+CmdButton("Jail", "jail")
+CmdButton("Unjail", "unjail")
+CmdButton("Frozen", "frozen")
+CmdButton("Unfrozen", "unfrozen")
+CmdButton("Poison", "poison")
+CmdButton("Sit", "sit")
+CmdButton("Kick", "kick")
+CmdButton("Bomb", "bomb")
+CmdButton("Float", "float")
+CmdButton("Backrooms", "backrooms")
+
+CommandSection:Button({
+    Title = "Verifique",
+    Callback = function()
+        EnviarBoard("verifique", "")
+    end
+})
+
+local SelfSection = Tab:Section({ Title = "Em Mim", Icon = "user", Opened = true })
+SelfSection:Button({
+    Title = "Backrooms em mim",
+    Callback = function()
+        Actions[";backrooms"]()
+    end
+})
+
+-- ========================================
+-- ABA JUMPSCARE (NOVA)
+-- ========================================
+local TabJumpscare = Window:Tab({ Title = "Jumpscare", Icon = "skull" })
+local SectionJumpscare = TabJumpscare:Section({ Title = "Jumpscares Terror", Icon = "ghost", Opened = true })
+
+JumpscareDropdown = SectionJumpscare:Dropdown({
+    Title = "Selecionar Jogador",
+    Values = GetPlayerNames(),
+    Callback = function(value)
+        SelectedPlayer = value
+    end
+})
+
+for name, data in pairs(Jumpscares) do
+    SectionJumpscare:Button({
+        Title = "/" .. name,
+        Desc = data.desc,
+        Callback = function()
+            if SelectedPlayer then
+                EnviarBoard(name, SelectedPlayer)
+            end
+        end
+    })
+end
+
+-- ========================================
+-- ABA CHAT (SUBSTITUI A ANTIGA ABA AVISOS)
+-- ========================================
+local TabChat = Window:Tab({ Title = "Chat", Icon = "message-circle" })
+local SectionChat = TabChat:Section({ Title = "Enviar Mensagem como outro jogador", Icon = "send", Opened = true })
+
+ChatDropdown = SectionChat:Dropdown({
+    Title = "Selecionar Jogador",
+    Values = GetPlayerNames(),
+    Callback = function(value)
+        SelectedPlayer = value
+    end
+})
+
+local mensagemChat = ""
+SectionChat:Input({
+    Title = "Mensagem",
+    Description = "Digite o texto que serÃ¡ enviado no chat pela pessoa escolhida",
+    Default = "",
+    Placeholder = "Ex: OlÃ¡ pessoal!",
+    Callback = function(txt)
+        mensagemChat = txt
+    end
+})
+
+SectionChat:Button({
+    Title = "Enviar Mensagem",
+    Description = "O jogador selecionado enviarÃ¡ esta mensagem no chat global",
+    Callback = function()
+        if mensagemChat == "" or mensagemChat == nil then
+            warn("Digite uma mensagem!")
+            return
+        end
+        if not SelectedPlayer then
+            warn("Selecione um jogador!")
+            return
+        end
+        EnviarBoard("say " .. SelectedPlayer:lower() .. " " .. mensagemChat, "")
+    end
+})
+
+-- AtualizaÃ§Ã£o inicial
+task.spawn(function()
+    task.wait(1)
+    RefreshAllDropdowns()
+end)
+
+print("Spectra Admin carregado!")
+print("Minimize a janela para ver o botÃ£o flutuante.")
